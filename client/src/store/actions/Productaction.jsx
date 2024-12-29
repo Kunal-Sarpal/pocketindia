@@ -1,33 +1,39 @@
 import axios from "axios"
 import { addData, getData } from "../reducers/dataReducer";
 
-export const asyncGetProducts = () => async (dispatch) =>{
-     
-    try{
-        const response = await axios.get("http://145.223.19.43:3000/products"); 
-        dispatch(getData(response.data))
-    }
-    catch(error){
-        console.log(error)  
-    }
-}
+const axiosInstance = axios.create({
+    baseURL: "https://www.pocketindia.shop",
+});
 
-export const asyncCreateProducts = (data) => async (dispatch) =>{
-    console.log(localStorage.getItem("token"));
+export const asyncGetProducts = () => async (dispatch) => {
+    try {
+        const response = await axiosInstance.get("/products");
+        dispatch(getData(response.data));
+    } catch (error) {
+        console.error("Error fetching products:", error?.response?.data || error.message);
+    }
+};
 
-     
-    try{
-        await axios.post("http://145.223.19.43:3000/api/v1/admin/pocket/product/create",data,
-        {headers:{
-            "Authorization": `${localStorage.getItem("token")}`,
-            "Content-Type": "application/json"
-        }}
-        ); 
-        console.log(data)
-        dispatch(addData(data))
+export const asyncCreateProducts = (data) => async (dispatch) => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+        console.error("No token found. Please log in.");
+        return;
     }
-    catch(error){
-        console.log(error)  
+    try {
+        await axiosInstance.post(
+            "/api/v1/admin/pocket/product/create",
+            data,
+            {
+                headers: {
+                    Authorization: `${token}`,
+                    "Content-Type": "application/json",
+                },
+            }
+        );
+        dispatch(addData(data));
+    } catch (error) {
+        console.error("Error creating product:", error?.response?.data || error.message);
     }
-}
+};
 
