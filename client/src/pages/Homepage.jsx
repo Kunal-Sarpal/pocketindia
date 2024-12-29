@@ -54,7 +54,7 @@ const Homepage = () => {
                     {/* Cards Section */}
                     {data.length == 0 && <div className='text-xl font-light text-gray-500 mb-4'>No product available..</div>}
                     <div className="grid xl:grid-cols-4  grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                        {data.map((item,index) => (
+                        {data?.map((item,index) => (
                             <Card key={index} id={item._id} title={item.title} stock={item.stock} like={item.like} price={item.price} duration={item.duration} image={item.image} unit={item.unit} />
                         ))}
                        
