@@ -15,10 +15,8 @@ export const asyncGetProducts = () => async (dispatch) => {
 };
 
 export const loginAdmin = async (data) => {
-    console.log('Sending data to API:', data);
     try {
         const response = await axiosInstance.post("/api/v1/admin/pocket/register", data);
-        console.log('Response from API:', response);
         // localStorage.setItem('token', response.data.token);
         return response.data;
     } catch (error) {
@@ -27,6 +25,15 @@ export const loginAdmin = async (data) => {
             // console.log('API error response:', error.response.data);
         }
         return "Authentication failed";
+    }
+}
+
+export const handlePayment = async (data) => {
+    try {
+        const response = await axiosInstance.post("/user/buy", data);
+        return response.data;
+    } catch (error) {
+        return "Try again!";
     }
 }
 

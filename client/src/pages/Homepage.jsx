@@ -7,7 +7,6 @@ import { asyncGetProducts } from '../store/actions/Productaction';
 
 const Homepage = () => {
     const data = useSelector((state) => state.appdata.data)
-    console.log(data)
     const [open,setOpen] = useState(false);
     const dispatch = useDispatch();
 

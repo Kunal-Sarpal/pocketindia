@@ -2,7 +2,9 @@ import React, { useContext, useState } from 'react';
 import { FaArrowRight, FaTimesCircle } from 'react-icons/fa';  // Import icons
 import { IoMdArrowBack } from "react-icons/io";
 import { paymentContext } from '../paymentContext';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
+import { handlePayment } from '../store/actions/Productaction';
+import { toast, ToastContainer } from 'react-toastify';
 
 
 // Validation function
@@ -12,6 +14,9 @@ const validateUpiTransactionId = (upiTransactionId) => /^\d{12}$/.test(upiTransa
 
 const Payment = () => {
     const [step, setStep] = useState(1); // Control the current step (1 = scanner, 2 = form)
+
+    const params = useParams();
+    
     const {setPayment} = useContext(paymentContext);
     const [formData, setFormData] = useState({
         upiTransactionId: '',
@@ -25,35 +30,40 @@ const Payment = () => {
         const { name, value } = e.target;
         setFormData((prevData) => ({
             ...prevData,
-            [name]: value
+            [name]: value,
+            id:params.id
         }));
     };
     const navigate = useNavigate();
+    console.log(formData);
 
-    const handleNextStep = () => {
-        // Basic validation
-        if (step === 1) {
-            setStep(2); // Go to form step
-        } else {
+    const handleNextStep = async () => {
+
+    
             const { upiTransactionId, email, phoneNumber } = formData;
             let validationErrors = {};
             if (!validateUpiTransactionId(upiTransactionId))
-                validationErrors.upiTransactionId = 'UPI Transaction ID is required';
+                validationErrors.upiTransactionId = 'Please enter a valid Transaction ID.';
             if (!validateEmail(email)) validationErrors.email = 'Please enter a valid email address.';
             if (!validatePhoneNumber(phoneNumber)) validationErrors.phoneNumber = 'Please enter a valid 10-digit phone number.';
 
             if (Object.keys(validationErrors).length === 0) {
                 setIsSubmitted(true);
-                alert('Payment Successful!'); // Replace this with actual payment logic
+                await handlePayment(formData);
+                toast.success('Payment Successful!'); // Replace this with actual payment logic
             } else {
                 setErrors(validationErrors);
+                toast.error(validationErrors[Object.keys(validationErrors)[0]]);
+                
             }
-        }
+            
     };
 
     
 
     return (
+        <>
+        <ToastContainer/>
         <div className='w-full h-screen flex justify-center items-center'>
             <div className='absolute bottom-0 bg-red-700 text-white p-2'>
                 <strong>Note:</strong> Please don't make any payments. The website is still under development.
@@ -164,6 +174,7 @@ const Payment = () => {
         </div>
 
         </div>
+        </>
     );
 };
 

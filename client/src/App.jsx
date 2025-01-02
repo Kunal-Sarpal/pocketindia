@@ -21,7 +21,7 @@ const App = () => {
           <Route path='/admin' element={<Admin />} />
           <Route path='/cart' element={<Cart />} />
           <Route path='/api/v1/pocket/admin/pocketindia' element={<AdminLogin/>} />
-          <Route path='/payment' element={<Payment />} />
+          <Route path='/payment/:id' element={<Payment />} />
         </Routes>
       </div>
 
