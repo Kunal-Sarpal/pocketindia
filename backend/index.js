@@ -9,7 +9,11 @@ const checkToken = require('./middleware');
 const { productModel, orderModel } = require('./db');
 require('dotenv').config();
 
-app.use(cors());
+app.use(cors({
+    origin: 'http://www.pocketindia.shop', 
+    methods: ['GET', 'POST'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+}));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(helmet());
@@ -34,9 +38,9 @@ app.get('/products', async (req, res) => {
 // User purchase route
 app.post('/user/buy', async (req, res) => {
     console.log('POST /user/buy');
-    const { id,upiTransactionId, email, phone } = req.body;
+    const { id,upiTransactionId, email, phoneNumber } = req.body;
 
-    if (!upiTransactionId || !email || !phone) {
+    if (!upiTransactionId || !email || !phoneNumber) {
         return res.status(400).json({ message: 'Missing required fields (UPI Transaction ID, email, phone)' });
     }
 
@@ -51,7 +55,7 @@ app.post('/user/buy', async (req, res) => {
             productId: id,
             upiTransactionId,
             email,
-            phone
+            phoneNumber
         });
 
         if (!order) {
