@@ -38,9 +38,9 @@ app.get('/products', async (req, res) => {
 // User purchase route
 app.post('/user/buy', async (req, res) => {
     console.log('POST /user/buy');
-    const { id,upiTransactionId, email, phoneNumber } = req.body;
+    const { id,upiTransactionId, email, phone } = req.body;
 
-    if (!upiTransactionId || !email || !phoneNumber) {
+    if (!upiTransactionId || !email || !phone) {
         return res.status(400).json({ message: 'Missing required fields (UPI Transaction ID, email, phone)' });
     }
 
