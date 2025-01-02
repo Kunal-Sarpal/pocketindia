@@ -32,8 +32,13 @@ export const handlePayment = async (data) => {
     try {
         const response = await axiosInstance.post("/user/buy", data);
         return response.data;
-    } catch (error) {
-        return "Try again!";
+    }
+        catch (error) {
+            const status = error.response?.status;
+            const errorMessage = error.response?.data?.message || error.message;
+            console.error(`Error (${status}):`, errorMessage);
+        
+
     }
 }
 

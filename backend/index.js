@@ -32,7 +32,7 @@ app.get('/products', async (req, res) => {
 });
 
 // User purchase route
-app.get('/user/buy', async (req, res) => {
+app.post('/user/buy', async (req, res) => {
     console.log('POST /user/buy');
     const { id,upiTransactionId, email, phone } = req.body;
 
