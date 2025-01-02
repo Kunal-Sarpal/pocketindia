@@ -1,5 +1,6 @@
 import axios from "axios"
 import { addData, getData } from "../reducers/dataReducer";
+import { toast } from "react-toastify";
 
 const axiosInstance = axios.create({
     baseURL: "https://api.pocketindia.shop",
@@ -29,18 +30,32 @@ export const loginAdmin = async (data) => {
 }
 
 export const handlePayment = async (data) => {
-    try {
-        const response = await axiosInstance.post("/user/buy", data);
-        return response.data;
-    }
-        catch (error) {
-            const status = error.response?.status;
-            const errorMessage = error.response?.data?.message || error.message;
-            console.error(`Error (${status}):`, errorMessage);
-        
+    const obj = {
+        id: data.id,
+        upiTransactionId: data.formData.upiTransactionId,
+        email: data.formData.email,
+        phone: data.formData.phoneNumber
+    };
 
+    console.log("Sending payment data:", obj);
+
+    try {
+        const response = await axiosInstance.post("/user/buy", obj);
+        console.log("Payment response:", response);
+        return response.data;
+    } catch (error) {
+        // Log the entire error response
+        console.error("Error details:", error);
+        const errorMessage = error.response?.data?.message || error.message;
+        const statusCode = error.response?.status || 'unknown';
+        console.error(`Error (${statusCode}):`, errorMessage);
+
+        // Display the error to the user
+        toast.error(`Payment failed: ${errorMessage}`);
+        throw new Error(`Payment failed: ${errorMessage}`);
     }
-}
+};
+
 
 export const asyncCreateProducts = (data) => async (dispatch) => {
     const token = localStorage.getItem("token");
