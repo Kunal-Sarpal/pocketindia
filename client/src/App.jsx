@@ -5,6 +5,7 @@ import Admin from './pages/Admin'
 import { Route, Routes } from 'react-router-dom'
 import Cart from './pages/Cart'
 import Payment from './Components/Payment'
+import AdminLogin from './pages/AdminLogin'
 
 const App = () => {
 
@@ -19,6 +20,7 @@ const App = () => {
           <Route path='/' element={<Homepage />} />
           <Route path='/admin' element={<Admin />} />
           <Route path='/cart' element={<Cart />} />
+          <Route path='/api/v1/pocket/admin/pocketindia' element={<AdminLogin/>} />
           <Route path='/payment' element={<Payment />} />
         </Routes>
       </div>

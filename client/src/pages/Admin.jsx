@@ -5,6 +5,7 @@ import UpdateProducts from '../Components/UpdateProducts';
 
 const Admin = () => {
     return (
+        
         <div className="min-h-screen w-full flex flex-col bg-gray-100">
             {/* Upper Section */}
             <div className="w-full flex flex-wrap lg:flex-nowrap justify-between p-4 lg:p-8 gap-4 lg:gap-6">

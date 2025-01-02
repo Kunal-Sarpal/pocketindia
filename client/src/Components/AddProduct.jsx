@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { asyncCreateProducts } from '../store/actions/Productaction';
+import { TextField, Button, MenuItem, Select, InputLabel, FormControl, FormHelperText, CircularProgress } from '@mui/material';
 
 const AddProduct = () => {
     const [formData, setFormData] = useState({
@@ -9,10 +10,11 @@ const AddProduct = () => {
         stock: '',
         unit: '',
         duration: '',
-        imageUrl: '', // Image URL for the product
+        imageUrl: '',
     });
 
     const [error, setError] = useState('');
+    const [loading, setLoading] = useState(false);
     const dispatch = useDispatch();
 
     const handleChange = (e) => {
@@ -25,132 +27,126 @@ const AddProduct = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setLoading(true);
 
-        // You can use FormData or just send a plain object depending on your API requirements.
         const data = {
             title: formData.title,
             price: formData.price,
             stock: formData.stock,
             unit: formData.unit,
             duration: formData.duration,
-            image: formData.imageUrl, // Send image URL instead of file upload
+            image: formData.imageUrl,
         };
 
         try {
-            // Dispatch the async action to add product
             const token = localStorage.getItem('token');
-            if(!token){
+            if (!token) {
                 return setError('No token found');
             }
-            try{
-                dispatch(asyncCreateProducts(data));
 
-            }
-            catch(err){
+            try {
+                await dispatch(asyncCreateProducts(data));
+                setLoading(false);
+                setError('');
+                setFormData({
+                    title: '',
+                    price: '',
+                    stock: '',
+                    unit: '',
+                    duration: '',
+                    imageUrl: '',
+                });
+            } catch (err) {
                 setError(err.message);
+                setLoading(false);
             }
-
-            // Clear form data or show success message
-            // setFormData({
-            //     title: '',
-            //     price: '',
-            //     stock: '',
-            //     unit: '',
-            //     duration: '',
-            //     imageUrl: '',
-            // });
-            setError('');
         } catch (error) {
             setError('Error uploading product');
-            console.error('Error uploading product:', error);
+            setLoading(false);
         }
     };
 
     return (
-        <div className="max-w-lg mx-auto p-6 bg-white shadow-lg rounded-lg">
+        <div className="max-w-lg mx-auto p-6 bg-white  rounded-lg">
             <form onSubmit={handleSubmit}>
-                <div className="mb-4">
-                    <label className="block text-gray-700 font-semibold">Product Title</label>
-                    <input
-                        type="text"
-                        name="title"
-                        value={formData.title}
-                        onChange={handleChange}
-                        placeholder="Enter product title"
-                        className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        required
-                    />
-                </div>
-                <div className="mb-4">
-                    <label className="block text-gray-700 font-semibold">Price</label>
-                    <input
-                        type="number"
-                        name="price"
-                        value={formData.price}
-                        onChange={handleChange}
-                        placeholder="Enter product price"
-                        className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        required
-                    />
-                </div>
-                <div className="mb-4">
-                    <label className="block text-gray-700 font-semibold">Stock Quantity</label>
-                    <input
-                        type="number"
-                        name="stock"
-                        value={formData.stock}
-                        onChange={handleChange}
-                        placeholder="Enter stock quantity"
-                        className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        required
-                    />
-                </div>
-                <div className="mb-4">
-                    <label className="block text-gray-700 font-semibold">Unit</label>
-                    <select
+                <TextField
+                    label="Product Title"
+                    name="title"
+                    value={formData.title}
+                    onChange={handleChange}
+                    fullWidth
+                    margin="normal"
+                    required
+                    variant="outlined"
+                />
+                <TextField
+                    label="Price"
+                    name="price"
+                    value={formData.price}
+                    onChange={handleChange}
+                    fullWidth
+                    margin="normal"
+                    type="number"
+                    required
+                    variant="outlined"
+                />
+                <TextField
+                    label="Stock Quantity"
+                    name="stock"
+                    value={formData.stock}
+                    onChange={handleChange}
+                    fullWidth
+                    margin="normal"
+                    type="number"
+                    required
+                    variant="outlined"
+                />
+                <FormControl fullWidth margin="normal" required variant="outlined">
+                    <InputLabel>Unit</InputLabel>
+                    <Select
                         name="unit"
                         value={formData.unit}
                         onChange={handleChange}
-                        className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        required
+                        label="Unit"
                     >
-                        <option value="">Select Unit</option>
-                        <option value="days">Days</option>
-                        <option value="months">Months</option>
-                        <option value="years">Years</option>
-                    </select>
-                </div>
-                <div className="mb-4">
-                    <label className="block text-gray-700 font-semibold">Duration</label>
-                    <input
-                        type="number"
-                        name="duration"
-                        value={formData.duration}
-                        onChange={handleChange}
-                        placeholder="Enter product duration"
-                        className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        required
-                    />
-                </div>
-                <div className="mb-4">
-                    <label className="block text-gray-700 font-semibold">Product Image URL</label>
-                    <input
-                        type="text"
-                        name="imageUrl"
-                        value={formData.imageUrl}
-                        onChange={handleChange}
-                        placeholder="Enter product image URL"
-                        className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        required
-                    />
-                </div>
-                <div className="flex justify-center">
-                    <button
+                        <MenuItem value="days">Days</MenuItem>
+                        <MenuItem value="months">Months</MenuItem>
+                        <MenuItem value="years">Years</MenuItem>
+                    </Select>
+                    <FormHelperText>{error && 'Please select a unit'}</FormHelperText>
+                </FormControl>
+                <TextField
+                    label="Duration"
+                    name="duration"
+                    value={formData.duration}
+                    onChange={handleChange}
+                    fullWidth
+                    margin="normal"
+                    type="number"
+                    required
+                    variant="outlined"
+                />
+                <TextField
+                    label="Product Image URL"
+                    name="imageUrl"
+                    value={formData.imageUrl}
+                    onChange={handleChange}
+                    fullWidth
+                    margin="normal"
+                    required
+                    variant="outlined"
+                />
+                <div className="flex justify-center mt-4">
+                    <Button
                         type="submit"
-                        className="px-6 py-3 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        variant="contained"
+                        color="primary"
+                        size="large"
+                        disabled={loading}
+                        startIcon={loading ? <CircularProgress size={24} /> : null}
                     >
-                        Upload Product
-                    </button>
+                        {loading ? 'Uploading...' : 'Upload Product'}
+                    </Button>
                 </div>
                 {error && <div className="mt-4 text-red-500 text-center">{error}</div>}
             </form>

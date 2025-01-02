@@ -2,7 +2,7 @@ import axios from "axios"
 import { addData, getData } from "../reducers/dataReducer";
 
 const axiosInstance = axios.create({
-    baseURL: "https://www.pocketindia.shop",
+    baseURL: "https://api.pocketindia.shop",
 });
 
 export const asyncGetProducts = () => async (dispatch) => {
@@ -13,6 +13,22 @@ export const asyncGetProducts = () => async (dispatch) => {
         console.error("Error fetching products:", error?.response?.data || error.message);
     }
 };
+
+export const loginAdmin = async (data) => {
+    console.log('Sending data to API:', data);
+    try {
+        const response = await axiosInstance.post("/api/v1/admin/pocket/register", data);
+        console.log('Response from API:', response);
+        // localStorage.setItem('token', response.data.token);
+        return response.data;
+    } catch (error) {
+        // console.error('Error while logging in:', error);
+        if (error.response) {
+            // console.log('API error response:', error.response.data);
+        }
+        return "Authentication failed";
+    }
+}
 
 export const asyncCreateProducts = (data) => async (dispatch) => {
     const token = localStorage.getItem("token");
