@@ -28,7 +28,7 @@ const Cart = () => {
                       <IoMdArrowBack size={30} onClick={() => {setPayment((prev) => !prev);navigate(-1)}} />
                   </div>
       <div className="max-w-7xl mx-auto text-center mb-12">
-        <h1 className="text-5xl font-extrabold text-gray-900 border-b-2 border-zinc-400 pb-4">Your Favourite Products</h1>
+        <h1 className="md:text-5xl text-4xl font-extrabold text-gray-900 border-b-2 border-zinc-400 pb-4">Your Favourite Products</h1>
         
       </div>
       
@@ -43,7 +43,7 @@ const Cart = () => {
                 {/* Image Section */}
                 <div className="bg-gray-200 flex items-center justify-center p-2">
                   <img
-                    src="https://www.scdn.co/i/_global/open-graph-default.png"
+                    src={item.image}
                     alt="Spotify Premium"
                     className="w-full h-full object-cover rounded-md"
                   />
@@ -58,6 +58,12 @@ const Cart = () => {
                     <p className="text-xl text-zinc-700 font-semibold">₹{item.price}</p>
                     <p className="text-md font-semibold text-zinc-500 pb-1 line-through">₹199</p>
                   </div>
+                  <div className="flex gap-2 items-center">
+                    <p className="text-gray-600 text-sm font-medium">
+                      for <span className="font-semibold">{item.duration} {item.unit}</span>
+                    </p>
+                  </div>
+
                   <p className="text-red-500 leading-snug">
                     {item.stock > 0 ? `${item.stock} items left at this price!` : 'Item left at this price!'}
                   </p>
@@ -90,7 +96,7 @@ const Cart = () => {
           </div>
         ) : (
           <div className="flex flex-col items-center justify-center mt-20">
-            <p className="text-2xl text-gray-800 poppins-light">Your don't have favourite product yet 🥹</p>
+            <p className="md:text-2xl text-gray-800 poppins-light text-xl">Your don't have favourite product yet 🥹</p>
             <img
               src="https://via.placeholder.com/150"
               alt="Empty Cart"

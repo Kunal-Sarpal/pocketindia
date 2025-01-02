@@ -20,7 +20,7 @@ const Card = ({ id, price, title, stock, like,duration,unit,image }) => {
     };
 
     const handleAddToCart = () => {
-        const item = { id, price, title,stock };
+        const item = { id, price, title,stock,image,duration,unit };
         dispatch(addItemToCart(item));
     };
 
