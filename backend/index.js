@@ -10,10 +10,8 @@ const { productModel, orderModel } = require('./db');
 require('dotenv').config();
 
 app.use(cors({
-    origin: 'http://www.pocketindia.shop', 
-    methods: ['GET', 'POST'],
-    allowedHeaders: ['Content-Type', 'Authorization'],
-}));
+    origin: '*';
+   }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(helmet());
@@ -55,7 +53,7 @@ app.post('/user/buy', async (req, res) => {
             productId: id,
             upiTransactionId,
             email,
-            phoneNumber
+            phone
         });
 
         if (!order) {
