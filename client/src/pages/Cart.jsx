@@ -28,7 +28,7 @@ const Cart = () => {
                       <IoMdArrowBack size={30} onClick={() => {setPayment((prev) => !prev);navigate(-1)}} />
                   </div>
       <div className="max-w-7xl mx-auto text-center mb-12">
-        <h1 className="md:text-5xl text-4xl font-extrabold text-gray-900 border-b-2 border-zinc-400 pb-4">Your Favourite Products</h1>
+        <h1 className="md:text-5xl text-2xl font-extrabold text-gray-900 border-b-2 border-zinc-400 pb-4">Your Favourite Products</h1>
         
       </div>
       
@@ -96,12 +96,8 @@ const Cart = () => {
           </div>
         ) : (
           <div className="flex flex-col items-center justify-center mt-20">
-            <p className="md:text-2xl text-gray-800 poppins-light text-xl">Your don't have favourite product yet 🥹</p>
-            <img
-              src="https://via.placeholder.com/150"
-              alt="Empty Cart"
-              className="mt-4 rounded-full"
-            />
+            <p className="md:text-2xl text-gray-800 poppins-light text-md text-center">Your don't have favourite product yet 🥹</p>
+            
           </div>
         )}
       </div>

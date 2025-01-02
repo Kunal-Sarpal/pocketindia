@@ -55,6 +55,9 @@ const Payment = () => {
 
     return (
         <div className='w-full h-screen flex justify-center items-center'>
+            <div className='absolute bottom-0 bg-red-700 text-white p-2'>
+                <strong>Note:</strong> Please don't make any payments. The website is still under development.
+            </div>
         <div className=" max-w-4xl   h-fit  mx-auto p-8 bg-white rounded-lg shadow-lg flex justify-center items-center border-2">
             <div className="absolute top-4 left-4 p-2 bg-[#ccc] text-zinc-500 border-zinc-500 border   rounded-full shadow-md hover:shadow-lg transform transition-all duration-300 hover:scale-110 cursor-pointer z-50">
                 <IoMdArrowBack size={30} onClick={() => {setPayment((prev) => !prev);navigate(-1)}} />
@@ -64,8 +67,10 @@ const Payment = () => {
                     {/* Step 1: Scanner Screen */}
                         <div className="text-center">
                             <h2 className="text-xl font-semibold text-gray-900 mb-6">Scan UPI QR Code</h2>
-                            <div className='rounded-md shadow-2xl shadow-green-100 border z-0'>
-                                <img className='scale-90 z-0' src="https://svrtechnologies.com/wp-content/uploads/upi-scanner-01.webp" alt="UPI QR Code" />
+                            <div className='rounded-md shadow-2xl shadow-green-100 border z-0 flex justify-center items-center p-2 border-2'>
+                                {/* <img className='scale-90 z-0' src="https://svrtechnologies.com/wp-content/uploads/upi-scanner-01.webp" alt="UPI QR Code" /> */}
+                                
+                                <a href="https://imgbb.com/"><img src="https://i.ibb.co/zbk0Fpk/Screenshot-2025-01-03-011221.png" alt="Screenshot-2025-01-03-011221" border="0"/></a>
                             </div>
                            
                             
@@ -130,7 +135,7 @@ const Payment = () => {
                                         <button
                                             type="button"
                                             onClick={handleNextStep}
-                                        className="w-full border text-[#9333EA] border-[#9333EA] py-2 rounded-md hover:scale-95 shadow shadow-yellow-500 hover:shadow focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 transition-all duration-100"
+                                        className="w-full border text-[#9333EA] border-[#9333EA] py-2 rounded-md hover:bg-zinc-200  shadow shadow-yellow-500"
                                         >
                                             Click to pay
                                         </button>

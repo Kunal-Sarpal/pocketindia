@@ -51,7 +51,7 @@ const Sidebar = () => {
 
             {/* Cart Section */}
             <div className="mt-auto pt-4 border-t-2 border-gray-200 flex w-full justify-center">
-                <div className="flex items-center space-x-4 px-4 py-2">
+                <div className="flex items-center justify-start w-full  space-x-4 px-4 py-2">
                     <Badge
                         badgeContent={cartItem.length === 0 ? 0 : cartItem.length}
                         color="error"
