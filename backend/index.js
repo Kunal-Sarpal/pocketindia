@@ -10,7 +10,7 @@ const { productModel, orderModel } = require('./db');
 require('dotenv').config();
 
 app.use(cors({
-    origin: 'https://www.pocketindia.shop'  
+    origin: '*'  
 }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
