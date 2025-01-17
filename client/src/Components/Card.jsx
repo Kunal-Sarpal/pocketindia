@@ -23,20 +23,21 @@ const Card = ({ id, price, title, stock, like,duration,unit,image }) => {
 
     const handleAddToCart = async () => {
         const item = { id, price, title,stock,image,duration,unit };
-        await dispatch(addItemToCart(item));
+         await dispatch(addItemToCart(item));
+     
         
-        toast.success('Item added to Fav', {
-            // position: toast.POSITION.TOP_RIGHT,
-            autoClose: 1300,
-            // hideProgressBar: true,
-            // closeOnClick: true,
-            // pauseOnHover: true,
-            // draggable: true,
-            progress:0,
-        })
+       
         
       
     };
+    useEffect(() => {
+        const interval = setInterval(()=>{
+            toast.dismiss();
+        }
+        ,1300)
+
+        return () => clearInterval(interval);
+    },[cartItem])
     useEffect(()=>{
         if(cartItem.length>0){
             const check = cartItem.find((item)=>item.id===id);
@@ -47,8 +48,7 @@ const Card = ({ id, price, title, stock, like,duration,unit,image }) => {
     },[cartItem])
 
     return (
-        <div className='w-full h-full'>
-            <ToastContainer />
+        <>
         <div className="shadow-md border border-zinc-300  h-full rounded-lg bg-white hover:shadow-xl transition-shadow duration-300 relative flex justify-between flex-col ">
             {/* Image Section */}
             <div className="bg-gray-200 h-full flex items-center justify-center p-2">
@@ -103,9 +103,9 @@ const Card = ({ id, price, title, stock, like,duration,unit,image }) => {
                     <Like initialLikes={like} />
                     </span> */}
             </div>
-            <ToastContainer/>
         </div>
-        </div>
+        </>
+           
     );
 };
 

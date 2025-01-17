@@ -17,6 +17,7 @@ const AddProduct = () => {
     const [loading, setLoading] = useState(false);
     const dispatch = useDispatch();
 
+    
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData((prevData) => ({
@@ -57,10 +58,19 @@ const AddProduct = () => {
                     imageUrl: '',
                 });
             } catch (err) {
-                setError(err.message);
-                setLoading(false);
+                if(err.isEmpty() || err == null || err == undefined){
+                    setError("Token is Invalid");
+                    setLoading(false);
+                }else{
+                    setError(err.message);
+                    setLoading(false);
+                }
             }
         } catch (error) {
+            if (error.isEmpty() || error == null || error == undefined) {
+                setError("Token is Invalid");
+                setLoading(false);
+            }
             setError('Error uploading product');
             setLoading(false);
         }

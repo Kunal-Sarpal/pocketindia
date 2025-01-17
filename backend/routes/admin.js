@@ -1,6 +1,6 @@
 const express = require('express');
 const jwt = require('jsonwebtoken');
-const Adminrouter = express.Router();
+const   Adminrouter = express.Router();
 
 Adminrouter.get('/', (req, res) => {
     res.send("Healthy");

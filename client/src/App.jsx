@@ -11,6 +11,8 @@ const App = () => {
 
 
   return (
+    <>
+    
     <PaymentProvider>
 
       <div className=' transition-all ease-in-out duration-300 select-none '>
@@ -26,6 +28,7 @@ const App = () => {
       </div>
 
     </PaymentProvider>
+    </>
   )
 }
 

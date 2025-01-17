@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
     Box,
     Table,
@@ -11,26 +11,106 @@ import {
     Paper,
     TextField,
 } from '@mui/material';
+import { useSelector } from 'react-redux';
+import axios from 'axios';
+import { toast, ToastContainer } from 'react-toastify';
+
 
 const UpdateProducts = () => {
+    const [update,setUpdate] = useState(false)
+    const [updateData,setUpdateData] = useState({
+        title:'',
+        price:'',
+        stock:'',
+    })
     const [orders, setOrders] = useState([
-        { _id: '12345', product: 'Prime', email: 'user1@example.com', price: 12.99, stock: 50 },
-        { _id: '67890', product: 'YouTube', email: 'user2@example.com', price: 9.99, stock: 75 },
-        { _id: '11223', product: 'Netflix', email: 'user3@example.com', price: 14.99, stock: 30 },
-        { _id: '44556', product: 'Disney+', email: 'user4@example.com', price: 10.99, stock: 100 },
-        { _id: '77889', product: 'Spotify', email: 'user5@example.com', price: 7.99, stock: 25 },
-        { _id: '99100', product: 'Hulu', email: 'user6@example.com', price: 11.99, stock: 60 },
-        { _id: '13579', product: 'Amazon', email: 'user7@example.com', price: 19.99, stock: 40 },
-        { _id: '24680', product: 'Apple Music', email: 'user8@example.com', price: 5.99, stock: 55 },
-        { _id: '86420', product: 'HBO Max', email: 'user9@example.com', price: 13.99, stock: 20 },
-        { _id: '97531', product: 'Peacock', email: 'user10@example.com', price: 8.99, stock: 45 },
+     
     ]);
+    const getData = ()=>{
+        axios.get('https://api.pocketindia.shop/products')
+        .then(res=>{
+            setOrders(res.data)
+        })
+    }
+    const handleDelete = async (id)=>{
+        try{
+        const del = await axios.post(`http://api.pocketindia.shop/api/v1/admin/pocket/product/delete?id=${id}`,null,{
+            headers:{
+                'Authorization':localStorage.getItem('token')
+            }
+        });
+         if(!del){
+            return toast.error(del.data?.message || "Error while deleting")
+         }
+         else{
+             toast.success(del.data?.message || "Deleted Successfully")
+
+         }
+
+         
+        }
+        catch(err){
+            toast.error(err+" Error while deleting")
+        }
+        
+            
+    }
+    const handleUpdate = async (id)=>{
+        const res = await axios.post(`http://localhost:3000/api/v1/admin/pocket/product/update?id=${id}`, updateData, {
+            headers: {
+                'Authorization': localStorage.getItem('token')
+            }
+        });
+        console.log(res)
+        if (res.data.msg === "Product updated successfully") {
+            toast.success("Product updated successfully")
+        } else {
+            toast.info('Product is up-to-date')
+        }
+        setUpdateData(() => ({
+            title: "",
+            price: "",
+            stick: ""
+        }))
+    }
+    useEffect(()=>{
+        getData()
+    },[])
+
+    
 
     // Handle cell change
-    const handleCellChange = (e, rowIndex, column) => {
-        const updatedOrders = [...orders];
-        updatedOrders[rowIndex][column] = e.target.value;
-        setOrders(updatedOrders);
+    const handleCellChange = async (e, rowIndex, column) => {
+        
+        try{
+
+            const updatedOrders = [...orders];
+            updatedOrders[rowIndex][column] = e.target.value;
+           
+            if (column == 'title') {
+                setUpdateData((prev) => ({
+                    ...prev,
+                    title: e.target.value
+                }))
+            }
+            if (column == 'price') {
+                setUpdateData((prev) => ({
+                    ...prev,
+                    price: e.target.value
+                }))
+            }
+            if (column == 'stock') {
+                setUpdateData((prev) => ({
+                    ...prev,
+                    stock: e.target.value
+                }))
+            }
+           
+        }
+        catch(err){
+            toast.error('Product not updated' + err)
+        }
+       
     };
 
     // Update the backend (example)
@@ -57,11 +137,14 @@ const UpdateProducts = () => {
     };
 
     return (
+        <>
+        <ToastContainer autoClose={1200} />
         <div className="bg-white p-5 shadow-md">
             <h1 className="text-3xl w-fit font-extrabold text-zinc-700 mb-5">
                 Update Orders
                 <hr className="mt-2 mb-4" />
             </h1>
+            <div className='width'></div>
 
             {/* Editable Orders Table */}
             <TableContainer component={Paper} sx={{ borderRadius: 1, overflow: 'hidden' }}>
@@ -70,7 +153,6 @@ const UpdateProducts = () => {
                         <TableRow sx={{ backgroundColor: '#f5f5f5' }}>
                             <TableCell>Order ID</TableCell>
                             <TableCell>Product</TableCell>
-                            <TableCell>Email</TableCell>
                             <TableCell>Price</TableCell>
                             <TableCell>Stock</TableCell>
                             <TableCell>Actions</TableCell>
@@ -81,20 +163,21 @@ const UpdateProducts = () => {
                             <TableRow key={order._id} hover>
                                 <TableCell>{order._id}</TableCell>
                                 <TableCell>
-                                    <TextField
-                                        value={order.product}
-                                        onChange={(e) => handleCellChange(e, rowIndex, 'product')}
-                                        onBlur={() => handleBlur(order._id, rowIndex)}
-                                        size="small"
-                                        fullWidth
-                                    />
+                                        <TextField
+                                            value={order.title}
+                                            onChange={(e) => handleCellChange(e, rowIndex, 'title')}
+                                            size="small"
+                                            fullWidth
+                                            type="string"
+
+                                        />
                                 </TableCell>
-                                <TableCell>{order.email}</TableCell>
+                                {/* <TableCell>{order.}</TableCell> */}
                                 <TableCell>
                                     <TextField
                                         value={order.price}
                                         onChange={(e) => handleCellChange(e, rowIndex, 'price')}
-                                        onBlur={() => handleBlur(order._id, rowIndex)}
+                                       
                                         size="small"
                                         fullWidth
                                         type="number"
@@ -104,7 +187,7 @@ const UpdateProducts = () => {
                                     <TextField
                                         value={order.stock}
                                         onChange={(e) => handleCellChange(e, rowIndex, 'stock')}
-                                        onBlur={() => handleBlur(order._id, rowIndex)}
+                                       
                                         size="small"
                                         fullWidth
                                         type="number"
@@ -115,7 +198,8 @@ const UpdateProducts = () => {
                                         variant="outlined"
                                         color="error"
                                         size="small"
-                                        onClick={() => console.log(`Deleting order ${order._id}`)} // Placeholder for delete
+                                        
+                                        onClick={() => handleDelete(order._id)} // Placeholder for delete
                                         sx={{
                                             textTransform: 'none',
                                             '&:hover': { backgroundColor: '#ffebee' },
@@ -124,12 +208,29 @@ const UpdateProducts = () => {
                                         Delete
                                     </Button>
                                 </TableCell>
+                                <TableCell>
+                                    <Button
+                                        variant="outlined"
+                                        color="success"
+                                        size="small"
+                                        onClick={() => handleUpdate(order._id)} // Placeholder for delete
+                                        sx={{
+                                            
+                                            textTransform: 'none',
+                                            '&:hover': { backgroundColor: '#fefefe' },
+                                        }}
+                                    >
+                                        Update
+                                    </Button>
+                                </TableCell>
                             </TableRow>
                         ))}
                     </TableBody>
                 </Table>
             </TableContainer>
         </div>
+        
+        </>
     );
 };
 
