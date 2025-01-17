@@ -56,7 +56,7 @@ const UpdateProducts = () => {
             
     }
     const handleUpdate = async (id)=>{
-        const res = await axios.post(`http://localhost:3000/api/v1/admin/pocket/product/update?id=${id}`, updateData, {
+        const res = await axios.post(`http://api.pocketindia.shop/api/v1/admin/pocket/product/update?id=${id}`, updateData, {
             headers: {
                 'Authorization': localStorage.getItem('token')
             }
