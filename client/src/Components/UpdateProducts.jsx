@@ -34,7 +34,7 @@ const UpdateProducts = () => {
     }
     const handleDelete = async (id)=>{
         try{
-        const del = await axios.post(`http://api.pocketindia.shop/api/v1/admin/pocket/product/delete?id=${id}`,null,{
+        const del = await axios.post(`https://api.pocketindia.shop/api/v1/admin/pocket/product/delete?id=${id}`,null,{
             headers:{
                 'Authorization':localStorage.getItem('token')
             }
