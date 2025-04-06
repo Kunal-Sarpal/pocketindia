@@ -1,0 +1,16 @@
+https://leetcode.com/problems/middle-of-the-linked-list/description/
+https://leetcode.com/problems/reverse-linked-list/description/
+https://leetcode.com/problems/delete-the-middle-node-of-a-linked-list/description/
+https://leetcode.com/problems/palindrome-linked-list/description/
+https://leetcode.com/problems/remove-nth-node-from-end-of-list/description/
+
+
+
+https://leetcode.com/problems/linked-list-cycle-ii/description/
+https://leetcode.com/problems/palindrome-linked-list/description/
+https://leetcode.com/problems/intersection-of-two-linked-lists/description/
+https://leetcode.com/problems/add-two-numbers/description/
+
+
+https://leetcode.com/problems/rotate-list/description/ (Linked list + Two pointe)
+https://leetcode.com/problems/intersection-of-two-linked-lists/description/

@@ -4,70 +4,26 @@ const Adminrouter = require('./routes/admin');
 const cors = require('cors');
 const mongoose = require('mongoose');
 const helmet = require('helmet');
-const ProductRouter = require('./routes/product');
 const checkToken = require('./middleware');
 const { productModel, orderModel } = require('./db');
+const AuthRouter = require('./routes/CustomerAndAgentAuth');
+const CustomerRouter = require('./routes/customer');
 require('dotenv').config();
 
 app.use(cors({
     origin: '*'
-}));
+})); 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(helmet());
 
 // Routes for admin and product
-app.use('/api/v1/admin/pocket', Adminrouter);
-app.use('/api/v1/admin/pocket/product', checkToken, ProductRouter);
+app.use('/api/v1/customer',CustomerRouter)
+app.use('/api/v1/auth',AuthRouter)
+app.use('/api/v1/admin', Adminrouter);
+
 
 app.get('/', (req, res) => { res.send('Hello World') });
-// Get all products route
-app.get('/products', async (req, res) => {
-    console.log('GET /products');
-    try {
-        const products = await productModel.find();
-        res.status(200).json(products);
-    } catch (err) {
-        console.error('Error fetching products:', err);
-        res.status(500).json({ message: 'Failed to retrieve products', error: err.message });
-    }
-});
-
-// User purchase route
-app.post('/user/buy', async (req, res) => {
-    console.log('POST /user/buy');
-    const { id, upiTransactionId, email, phone } = req.body;
-
-    if (!upiTransactionId || !email || !phone) {
-        return res.status(400).json({ message: 'Missing required fields (UPI Transaction ID, email, phone)' });
-    }
-
-    try {
-        // Check if the product exists
-        const product = await productModel.findById(id);
-        if (!product) {
-            return res.status(404).json({ message: 'Product not found' });
-        }
-
-        const order = await orderModel.create({
-            productId: id,
-            upiTransactionId,
-            email,
-            phone
-        });
-
-        if (!order) {
-            return res.status(500).json({ message: 'Failed to create order' });
-        }
-
-        res.status(201).json({ message: 'Order successfully created', order });
-    } catch (err) {
-        console.error('Error creating order:', err);
-        res.status(500).json({ message: 'Server error during order creation', error: err.message });
-    }
-});
-
-
 
 // Connect to MongoDB and start the server
 app.listen(3000, async () => {
