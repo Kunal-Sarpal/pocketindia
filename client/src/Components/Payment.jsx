@@ -56,9 +56,11 @@ const Payment = () => {
                         navigate('/')
                     },1000)
                 }
+                
+            
             } catch (error) {
                 toast.error('Payment failed. Please try again.');
-                console.error('Payment Error:', error);
+                // console.error('Payment Error:', error);
             } finally {
                 setIsSubmitted(false); 
             }

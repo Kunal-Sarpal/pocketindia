@@ -41,7 +41,7 @@ const Cart = () => {
                 className="shadow-md border  border-zinc-300 rounded-lg bg-white hover:shadow-xl transition-shadow duration-300 relative"
               >
                 {/* Image Section */}
-                <div className="bg-gray-200 flex items-center justify-center p-2">
+                <div className="bg-gray-200 h-40 flex items-center justify-center p-2">
                   <img
                     src={item.image}
                     alt="Spotify Premium"

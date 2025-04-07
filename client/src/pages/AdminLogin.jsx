@@ -58,8 +58,10 @@ const AdminLogin = () => {
 
         try {
             const resdata = await loginAdmin(formData);
-            if (resdata === "Authentication failed") {
-                toast.error('Login Failed!');
+            console.log(resdata.errorMessage);
+            if (resdata.statusCode == 401) {
+                toast.error(resdata.errorMessage);
+                return
                 // throw new Error('Login failed');
             } else {
                 const resToken = resdata.token;

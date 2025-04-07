@@ -29,13 +29,14 @@ AuthRouter.get("/", (req, res) => {
     res.send("Auth API is working ✅");
 });
 
-// ==========================
+// ==========================   
 // CUSTOMER ROUTES
 // ==========================
 
 AuthRouter.post("/customer/signup", async (req, res) => {
+    const { name, email, phone, password } = req.body;
+    console.log("Request Signup " +  name +  email + phone +  password)
     try {
-        const { name, email, phone, password } = req.body;
         if (!email || !password || !name || !phone) {
             return res.status(400).json({ message: "All fields are required" });
         }
@@ -58,9 +59,9 @@ AuthRouter.post("/customer/signup", async (req, res) => {
 
         // Remove password before sending back
         const { password: _, ...safeCustomer } = newCustomer._doc;
-        res.status(201).json({ message: "Customer registered successfully", customer: safeCustomer });
+        res.status(200).json({ message: "Customer registered successfully", customer: safeCustomer });
     } catch (error) {
-        res.status(500).json({ error: error.message });
+        return res.status(500).json({ message: error._message });
     }
 });
 
@@ -86,7 +87,7 @@ AuthRouter.post("/customer/login", async (req, res) => {
         const { password: _, ...safeCustomer } = customer._doc;
         res.status(200).json({ token, message: "Login successful", customer: safeCustomer });
     } catch (error) {
-        res.status(500).json({ error: error + " " });
+        return res.status(500).json({ message: error._message });
     }
 });
 
@@ -117,9 +118,9 @@ AuthRouter.post("/agent/signup", async (req, res) => {
         await newAgent.save();
 
         const { password: _, ...safeAgent } = newAgent._doc;
-        res.status(201).json({ message: "Agent registered successfully", agent: safeAgent });
+        res.status(200).json({ message: "Agent registered successfully", agent: safeAgent });
     } catch (error) {
-        res.status(500).json({ error: error.message });
+        res.status(500).json({ message: error._message });
     }
 });
 
@@ -145,7 +146,7 @@ AuthRouter.post("/agent/login", async (req, res) => {
         const { password: _, ...safeAgent } = agent._doc;
         res.status(200).json({ token, message: "Login successful", agent: safeAgent });
     } catch (error) {
-        res.status(500).json({ error: error.message });
+        return res.status(500).json({ message: error._message });
     }
 });
 

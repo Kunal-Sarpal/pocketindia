@@ -7,6 +7,7 @@ Adminrouter.get('/', (req, res) => {
     res.send("Healthy");
 });
 Adminrouter.post('/register', async (req, res) => {
+    console.log(" Register");
   
     try {
         const { email, password } = req.body;
@@ -19,6 +20,7 @@ Adminrouter.post('/register', async (req, res) => {
             return res.status(401).json({ msg: "Invalid Credentials" });
         }
     } catch (err) {
+        console.log("In err")
         res.status(500).json({ msg: err.message | "server error" });
     }
 });

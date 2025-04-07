@@ -6,6 +6,9 @@ import { Route, Routes } from 'react-router-dom'
 import Cart from './pages/Cart'
 import Payment from './Components/Payment'
 import AdminLogin from './pages/AdminLogin'
+import SignUp from './pages/SignUp'
+import Login from './pages/Login'
+import ProductStatus from './pages/ProductStatus'
 
 const App = () => {
 
@@ -21,6 +24,10 @@ const App = () => {
        
           <Route path='/' element={<Homepage />} />
           <Route path='/admin' element={<Admin />} />
+          <Route path='/signup' element={<SignUp />} />
+          <Route path='/login' element={<Login />} />
+          <Route path='/status' element={<ProductStatus />} />
+          
           <Route path='/cart' element={<Cart />} />
           <Route path='/api/v1/pocket/admin/pocketindia' element={<AdminLogin/>} />
           <Route path='/payment/:id' element={<Payment />} />

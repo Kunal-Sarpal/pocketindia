@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { paymentContext } from '../paymentContext';
-import { Button, duration } from '@mui/material';
+import { Button, buttonBaseClasses, duration } from '@mui/material';
 import Like from './Like';
 import { addItemToCart } from '../store/reducers/cartReducer';
 import { useNavigate } from 'react-router-dom';
@@ -51,11 +51,11 @@ const Card = ({ id, price, title, stock, like,duration,unit,image }) => {
         <>
         <div className="shadow-md border border-zinc-300  h-full rounded-lg bg-white hover:shadow-xl transition-shadow duration-300 relative flex justify-between flex-col ">
             {/* Image Section */}
-            <div className="bg-gray-200 h-full flex items-center justify-center p-2">
+            <div className="bg-gray-200 h-40 flex items-center justify-center p-2">
                 <img
                     src={image}
                     alt="Spotify Premium"
-                    className="w-full h-full object-cover scale rounded-md"
+                    className="w-full h-full object-cover  rounded-md"
                     />
             </div>
 
@@ -79,14 +79,16 @@ const Card = ({ id, price, title, stock, like,duration,unit,image }) => {
                 {/* Action Buttons */}
                 <div className="flex gap-2">
                     {/* Buy Now Button */}
-                    <Button
-                        size="small"
-                        variant="outlined"
-                        color="secondary"
-                        onClick={handlePayment}
+                        <Button
+                            size="small"
+                            variant="outlined"
+                            color="secondary"
+                            onClick={handlePayment}
+                            disabled={!localStorage.getItem('token')} // disable if no token
                         >
-                        Buy
-                    </Button>
+                            Buy
+                        </Button>
+                   
 
                     {/* Add to Cart Button */}
                     {item && <Button

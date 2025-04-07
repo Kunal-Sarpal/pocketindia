@@ -56,14 +56,14 @@ CustomerRouter.post('/order',checkToken, async (req, res) => {
 
 // customer purchased products
 CustomerRouter.get('/order/products', checkToken, async (req, res) => {
-    const { email, role, id } = req.user;
+    const { email, role } = req.user;
 
     if (role !== "Customer") {
         return res.status(403).json({ message: "Only customers can view purchased products" });
     }
 
     try {
-        const orders = await orderModel.find({ id }).populate('productId');
+        const orders = await orderModel.find({ email }).populate('productId');
 
         const products = orders.map(order => order.productId);
 
