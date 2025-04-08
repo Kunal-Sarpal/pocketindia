@@ -9,6 +9,7 @@ import AdminLogin from './pages/AdminLogin'
 import SignUp from './pages/SignUp'
 import Login from './pages/Login'
 import ProductStatus from './pages/ProductStatus'
+import Agent from './pages/Agent'
 
 const App = () => {
 
@@ -26,6 +27,7 @@ const App = () => {
           <Route path='/admin' element={<Admin />} />
           <Route path='/signup' element={<SignUp />} />
           <Route path='/login' element={<Login />} />
+          <Route path='/agent' element={<Agent/>} />
           <Route path='/status' element={<ProductStatus />} />
           
           <Route path='/cart' element={<Cart />} />

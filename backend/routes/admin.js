@@ -1,5 +1,5 @@
 const express = require('express');
-const { productModel } = require('../db');
+const { productModel, orderModel } = require('../db');
 const jwt = require('jsonwebtoken');
 const checkToken = require('../middleware');
 const   Adminrouter = express.Router();
@@ -54,6 +54,17 @@ Adminrouter.post('/delete/product', checkToken, async (req, res) => {
         return res.json({ msg: "Deleted" });
     } catch (err) {
         res.status(500).json({ msg: err.message + " - server error" });
+    }
+});
+Adminrouter.get('/get/orders', async (req, res) => {
+    console.log("get/orders")
+    try{
+        const orders = await orderModel.find().populate("productId");
+        console.log(orders)
+        return res.status(200).json({msg:"orders",orders});
+    }
+    catch(err){
+        res.status(500).json({msg:err._message});
     }
 });
 Adminrouter.post('/update/product', checkToken, async (req, res) => {

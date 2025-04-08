@@ -12,6 +12,7 @@ const Sidebar = () => {
     const navigate = useNavigate();
     const cartItem = useSelector(state => state.cartdata.cartItems,);
 
+
     return (
         <div className="text-[#191919] h-screen flex flex-col bg-white shadow-lg transition-all duration-300 ease-in-out">
 

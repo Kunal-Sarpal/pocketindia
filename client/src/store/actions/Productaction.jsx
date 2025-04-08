@@ -131,12 +131,12 @@ export const asyncCreateProducts = (data) => async (dispatch) => {
     }
 };
 export const OrderProducts = async (data) =>{
-    // const token = localStorage.getItem("token");
+    const token = localStorage.getItem("token");
 
-    // if (!token) {
-    //     console.error("No token found. Please log in.");
-    //     return;
-    // }
+    if (!token) {
+        console.error("No token found. Please log in.");
+        return;
+    }
 
     try {
         const response = await axiosInstance.get("/customer/order/products", {
@@ -145,6 +145,24 @@ export const OrderProducts = async (data) =>{
                 "Content-Type": "application/json",
             },
         });
+        return response.data;
+    } catch (error) {
+        console.log(error)
+        const errorMessage = error.response?.data?.message || error.message;
+        const statusCode = error.response?.status || 'unknown';
+        return { errorMessage, statusCode };
+    }
+};
+export const HandleOrders = async () => {
+   
+    try {
+        const response = await axiosInstance.get("/admin/get/orders", {
+            headers: {
+                authorization: localStorage.getItem("token"),
+                "Content-Type": "application/json",
+            },
+        });
+        console.log(response.data)
         return response.data;
     } catch (error) {
         console.log(error)

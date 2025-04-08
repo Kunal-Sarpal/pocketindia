@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { asyncCreateProducts } from '../store/actions/Productaction';
 import { TextField, Button, MenuItem, Select, InputLabel, FormControl, FormHelperText, CircularProgress } from '@mui/material';
+import { toast, ToastContainer } from 'react-toastify';
 
 const AddProduct = () => {
     const [formData, setFormData] = useState({
@@ -57,13 +58,17 @@ const AddProduct = () => {
                     duration: '',
                     imageUrl: '',
                 });
+                toast.success('Product Added Successfully');
             } catch (err) {
                 if(err.isEmpty() || err == null || err == undefined){
                     setError("Token is Invalid");
                     setLoading(false);
+                    toast.error(err);
                 }else{
                     setError(err.message);
                     setLoading(false);
+                    toast.error(err.message);
+
                 }
             }
         } catch (error) {
@@ -77,7 +82,13 @@ const AddProduct = () => {
     };
 
     return (
+        <>
+        <ToastContainer/>
         <div className="max-w-lg mx-auto p-6 bg-white  rounded-lg">
+            <h1 className="text-3xl w-fit font-extrabold text-zinc-700 mb-5">
+                Add Product
+                <hr className="mt-2 mb-4" />
+            </h1>
             <form onSubmit={handleSubmit}>
                 <TextField
                     label="Product Title"
@@ -161,6 +172,7 @@ const AddProduct = () => {
                 {error && <div className="mt-4 text-red-500 text-center">{error}</div>}
             </form>
         </div>
+        </>
     );
 };
 
