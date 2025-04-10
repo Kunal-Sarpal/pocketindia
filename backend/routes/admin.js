@@ -2,16 +2,18 @@ const express = require('express');
 const { productModel, orderModel } = require('../db');
 const jwt = require('jsonwebtoken');
 const checkToken = require('../middleware');
+const checkIfAdmin = require('../middleware');
+
 const   Adminrouter = express.Router();
 Adminrouter.get('/', (req, res) => {
     res.send("Healthy");
 });
 Adminrouter.post('/register', async (req, res) => {
     console.log(" Register");
-  
+
     try {
         const { email, password } = req.body;
-       
+
 
         if (email === process.env.ADMIN_MAIL && password === process.env.ADMIN_PASSWORD) {
             const token = jwt.sign({ email:email, role:"Admin" }, process.env.ADMIN_SECRET, { expiresIn: '24h' });
@@ -21,11 +23,11 @@ Adminrouter.post('/register', async (req, res) => {
         }
     } catch (err) {
         console.log("In err")
-        res.status(500).json({ msg: err.message | "server error" });
+        res.status(500).json({ msg: err.message + " - server error" });
     }
 });
 
-Adminrouter.post('/create/product', checkToken, async (req, res) => {
+Adminrouter.post('/create/product', checkToken,checkIfAdmin, async (req, res) => {
     console.log('/create request');
     try {
         const { title, price, stock, image, unit, duration } = req.body;
@@ -33,12 +35,24 @@ Adminrouter.post('/create/product', checkToken, async (req, res) => {
         if (!title || !price || !stock || !image || !unit || !duration) {
             return res.status(400).json({ msg: "Please fill all the fields" });
         }
-        const product = await productModel.create({ title, price, stock, image, unit, duration });
+
+        // Convert numeric values to numbers
+        const productData = {
+            title,
+            price: Number(price),
+            stock: Number(stock),
+            image,
+            unit,
+            duration: Number(duration)
+        };
+
+        const product = await productModel.create(productData);
 
         res.status(200).json({ msg: "Product created successfully", product });
 
     } catch (err) {
-        res.status(500).json({ msg: err.message + "server error" });
+        console.error('Error creating product:', err);
+        res.status(500).json({ msg: err.message + " - server error" });
     }
 });
 

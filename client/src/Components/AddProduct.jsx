@@ -18,7 +18,7 @@ const AddProduct = () => {
     const [loading, setLoading] = useState(false);
     const dispatch = useDispatch();
 
-    
+
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData((prevData) => ({
@@ -43,12 +43,18 @@ const AddProduct = () => {
         try {
             const token = localStorage.getItem('token');
             if (!token) {
-                return setError('No token found');
+                setError('No token found');
+                setLoading(false);
+                toast.error('Please login first');
+                return;
             }
 
-            try {
-                await dispatch(asyncCreateProducts(data));
-                setLoading(false);
+            const result = await dispatch(asyncCreateProducts(data));
+       
+            if (result && result.error) {
+                setError(result.error);
+                toast.error(result.error);
+            } else {
                 setError('');
                 setFormData({
                     title: '',
@@ -59,24 +65,12 @@ const AddProduct = () => {
                     imageUrl: '',
                 });
                 toast.success('Product Added Successfully');
-            } catch (err) {
-                if(err.isEmpty() || err == null || err == undefined){
-                    setError("Token is Invalid");
-                    setLoading(false);
-                    toast.error(err);
-                }else{
-                    setError(err.message);
-                    setLoading(false);
-                    toast.error(err.message);
-
-                }
             }
         } catch (error) {
-            if (error.isEmpty() || error == null || error == undefined) {
-                setError("Token is Invalid");
-                setLoading(false);
-            }
-            setError('Error uploading product');
+            console.error('Error in handleSubmit:', error);
+            setError(error || 'Error uploading product');
+            toast.error(error._message || 'Error uploading product');
+        } finally {
             setLoading(false);
         }
     };

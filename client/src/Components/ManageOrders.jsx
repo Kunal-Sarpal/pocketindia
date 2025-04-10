@@ -47,8 +47,8 @@ const ManageOrders = () => {
     )
 
     return (
-        <div className="bg-white p-5  w-full h-full overflow-y-auto">
-            <h1 className="text-3xl w-fit font-extrabold text-zinc-700 mb-5">
+        <div className="bg-white  w-full h-full overflow-y-auto">
+            <h1 className="text-3xl w-fit font-extrabold text-zinc-700 ">
                 Manage Orders
                 <hr className="mt-2 mb-4" />
             </h1>
@@ -62,7 +62,7 @@ const ManageOrders = () => {
                         value={searchType}
                         onChange={(e) => setSearchType(e.target.value)}
                         label="Type"
-                        sx={{ width: '200px' }}
+                        sx={{ width: '100px' }}
                     >
                         <MenuItem value="email">Email</MenuItem>
                         <MenuItem value="upi">UPI UTR</MenuItem>

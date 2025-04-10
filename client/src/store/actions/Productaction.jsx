@@ -72,7 +72,7 @@ export const SignUpAgent = async (data) => {
 // ========== ADMIN ==========
 
 export const loginAdmin = async (data) => {
-   
+
     try {
         const response = await axiosInstance.post("/admin/register", data);
         return response.data;
@@ -115,19 +115,20 @@ export const asyncCreateProducts = (data) => async (dispatch) => {
 
     if (!token) {
         console.error("No token found. Please log in.");
-        return;
+        return { error: "No token found. Please log in." };
     }
 
     try {
-        await axiosInstance.post("/admin/create/product", data, {
+        const response = await axiosInstance.post("/admin/create/product", data, {
             headers: {
-                Authorization: `${token}`,
+                authorization: token,
                 "Content-Type": "application/json",
             },
         });
         dispatch(addData(data));
+        return response.data;
     } catch (error) {
-        console.error("Error creating product:", error?.response?.data || error.message);
+        return { error: error.response.data.message };
     }
 };
 export const OrderProducts = async (data) =>{
@@ -154,7 +155,7 @@ export const OrderProducts = async (data) =>{
     }
 };
 export const HandleOrders = async () => {
-   
+
     try {
         const response = await axiosInstance.get("/admin/get/orders", {
             headers: {
