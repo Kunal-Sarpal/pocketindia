@@ -23,14 +23,15 @@ const Login = () => {
         e.preventDefault();
         if (pointer) {
             const res = await LoginCustomer(formData);
-            console.log(res);
-            if (res.statusCode == 500 || res.statusCode == 404 || res.statusCode == 401) {
-                toast.error(res.errorMessage);
-                return;
-            }
-            if (res.statusCode === 400) {
-                toast.warning(res.errorMessage);
-                return;
+            if(res != undefined){
+                if (res.statusCode != undefined && res.statusCode == 500 || res.statusCode == 404 || res.statusCode == 401) {
+                    toast.error(res.errorMessage);
+                    return;
+                }
+                if (res.statusCode === 400) {
+                    toast.warning(res.errorMessage);
+                    return;
+                }
             }
             toast.success("Customer Logged in Successfully");
             setTimeout(() => {
@@ -39,7 +40,6 @@ const Login = () => {
 
         } else {
             const res = await LoginAgent(formData);
-            console.log(res);
             if (res.statusCode == 500  || res.statusCode == 401 || res.statusCode == 404) {
                 toast.error(res.errorMessage);
                 return;

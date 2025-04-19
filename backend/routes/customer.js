@@ -1,8 +1,11 @@
 const express = require('express');
 const jwt = require('jsonwebtoken');
 const { productModel, trackModel, orderModel } = require('../db');
-const checkToken = require('../middleware');
+const { checkToken } = require('../middleware');
+
 const CustomerRouter = express.Router();
+
+
 
 CustomerRouter.get('/', (req, res) => {
     res.send("Healthy");
@@ -55,8 +58,10 @@ CustomerRouter.post('/order',checkToken, async (req, res) => {
 });
 
 // customer purchased products
-CustomerRouter.get('/order/products', checkToken, async (req, res) => {
+CustomerRouter.get('/order/products',checkToken, async (req, res) => {
     const { email, role } = req.user;
+    console.log('GET /user/buy/products', email, role);
+
 
     if (role !== "Customer") {
         return res.status(403).json({ message: "Only customers can view purchased products" });

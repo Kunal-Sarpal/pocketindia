@@ -1,21 +1,31 @@
 import { useEffect, useState } from 'react';
 import OrderCard from '../Components/OrderCard';
 import { OrderProducts } from '../store/actions/Productaction';
+import { toast, ToastContainer } from 'react-toastify';
 
 
 
 const ProductStatus = () => {
     const [data, setData] = useState([]);
+    const [error, setError] = useState(null);
 
     useEffect(() => {
         const fetchOrders = async () => {
             const orders = await OrderProducts();
-            console.log(data)
+            if (orders.errorMessage){
+                toast.error("Something went wrong while fetching orders");
+                return;
+            }
+            toast.success("Customer Orders");
             setData(orders.products);
         };
         fetchOrders();
     }, []);
+    
     return (
+        <>
+        <ToastContainer/>
+
         <div className="h-screen bg-gray-100  flex p-5 ">
             <div className=" w-1/2 flex flex-col  gap-1   p-6 space-y-6 bg-white  ">
                 <h1 className='text-3xl font-extrabold  text-gray-700'>Orders</h1>
@@ -50,6 +60,8 @@ const ProductStatus = () => {
                 <OrderCard/>
             </div>
         </div>
+        
+        </>
     );
 };
 

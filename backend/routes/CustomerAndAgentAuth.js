@@ -66,6 +66,7 @@ AuthRouter.post("/customer/signup", async (req, res) => {
 });
 
 AuthRouter.post("/customer/login", async (req, res) => {
+    console.log("Get /login")
     try {
         const { email, password } = req.body;
         if (!email || !password) {
@@ -85,8 +86,9 @@ AuthRouter.post("/customer/login", async (req, res) => {
         );
 
         const { password: _, ...safeCustomer } = customer._doc;
-        res.status(200).json({ token, message: "Login successful", customer: safeCustomer });
+         res.status(200).json({ token, message: "Login successful", customer: safeCustomer });
     } catch (error) {
+        console.log(error._message)
         return res.status(500).json({ message: error._message });
     }
 });

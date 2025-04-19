@@ -34,7 +34,7 @@ export const handlePayment = async (data) => {
         });
         return response.data;
     } catch (error) {
-        console.log(error);
+        // console.log(error);
 
         console.error("Error handling payment:", error);
         const errorMessage = error.response?.data?.message || error.message;
@@ -90,7 +90,6 @@ export const LoginAgent = async (data) => {
         localStorage.setItem("token", response.data.token);
         return response.data;
     } catch (error) {
-        console.log(error);
         const errorMessage = error.response?.data?.message || error.message;
         const statusCode = error.response?.status || 'unknown';
         return { errorMessage, statusCode };
@@ -98,11 +97,11 @@ export const LoginAgent = async (data) => {
 };
 
 export const LoginCustomer = async (data) => {
-
+    
     try {
         const response = await axiosInstance.post("/auth/customer/login", data);
         localStorage.setItem("token", response.data.token);
-        return response.data;
+ 
     } catch (error) {
         const errorMessage = error.response?.data?.message || error.message;
         const statusCode = error.response?.status || 'unknown';
@@ -131,7 +130,7 @@ export const asyncCreateProducts = (data) => async (dispatch) => {
         return { error: error.response.data.message };
     }
 };
-export const OrderProducts = async (data) =>{
+export const  OrderProducts = async (data) =>{
     const token = localStorage.getItem("token");
 
     if (!token) {
@@ -148,8 +147,7 @@ export const OrderProducts = async (data) =>{
         });
         return response.data;
     } catch (error) {
-        console.log(error)
-        const errorMessage = error.response?.data?.message || error.message;
+            const errorMessage = error.response?.data?.message || error.message;
         const statusCode = error.response?.status || 'unknown';
         return { errorMessage, statusCode };
     }
@@ -163,10 +161,8 @@ export const HandleOrders = async () => {
                 "Content-Type": "application/json",
             },
         });
-        console.log(response.data)
         return response.data;
     } catch (error) {
-        console.log(error)
         const errorMessage = error.response?.data?.message || error.message;
         const statusCode = error.response?.status || 'unknown';
         return { errorMessage, statusCode };

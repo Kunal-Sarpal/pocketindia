@@ -49,7 +49,7 @@ const checkToken = (req, res, next) => {
 const checkIfAdmin = (req, res, next) => {
     try {
         if (!req.user) {
-            return res.status(401).json({ success: false, message: 'User not authenticated' });
+            return res.status(401).json({ success: false, message: 'User not authenticated here' });
         }
 
         if (req.user.role === "Admin") {
@@ -61,8 +61,10 @@ const checkIfAdmin = (req, res, next) => {
         console.log(error);
         return res.status(400).json({ success: false, message: 'Token verification failed', error });
     }
-    next()
+
 }
 
-module.exports = checkToken;
-module.exports = checkIfAdmin;
+module.exports = {
+    checkToken,
+    checkIfAdmin
+};

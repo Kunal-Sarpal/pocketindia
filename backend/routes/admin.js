@@ -1,8 +1,8 @@
 const express = require('express');
 const { productModel, orderModel } = require('../db');
 const jwt = require('jsonwebtoken');
-const checkToken = require('../middleware');
-const checkIfAdmin = require('../middleware');
+const { checkIfAdmin, checkToken } = require('../middleware');
+
 
 const   Adminrouter = express.Router();
 Adminrouter.get('/', (req, res) => {
@@ -56,7 +56,7 @@ Adminrouter.post('/create/product', checkToken,checkIfAdmin, async (req, res) =>
     }
 });
 
-Adminrouter.post('/delete/product', checkToken, async (req, res) => {
+Adminrouter.post('/delete/product', checkToken,checkIfAdmin, async (req, res) => {
     try {
         const { id } = req.query;
         if (!id) {
@@ -121,7 +121,7 @@ Adminrouter.post('/update/product', checkToken, async (req, res) => {
         res.status(500).json({ msg: `${err.message} - server error` });
     }
 });
-Adminrouter.post('/assign/agent', checkToken, async (req, res) => {
+Adminrouter.post('/assign/agent', checkToken,checkIfAdmin, async (req, res) => {
     try {
         const { orderId, agentId } = req.body;
 
