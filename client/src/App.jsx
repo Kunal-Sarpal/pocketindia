@@ -29,6 +29,7 @@ const App = () => {
           <Route path='/login' element={<Login />} />
           <Route path='/agent' element={<Agent/>} />
           <Route path='/status' element={<ProductStatus />} />
+          <Route path='/agent/assign/to/orderid/:id' element={<Agent />} />
           
           <Route path='/cart' element={<Cart />} />
           <Route path='/api/v1/pocket/admin/pocketindia' element={<AdminLogin/>} />

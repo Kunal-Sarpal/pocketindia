@@ -168,3 +168,23 @@ export const HandleOrders = async () => {
         return { errorMessage, statusCode };
     }
 };
+
+export const GetAgents = async () => {
+    console.log("call");
+    try {
+        const response = await axiosInstance.get("/admin/get/agents", {
+            headers: {
+                authorization: localStorage.getItem("token"),
+                "Content-Type": "application/json",
+            },
+        });
+        return response.data;
+    } catch (error) {
+        console.log("In error")
+        const errorMessage = error.response?.data?.message || error.message;
+        console.log(error)
+
+        const statusCode = error.response?.status || 'unknown';
+        return { errorMessage, statusCode };
+    }
+}

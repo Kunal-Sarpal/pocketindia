@@ -1,5 +1,5 @@
 const express = require('express');
-const { productModel, orderModel } = require('../db');
+const { productModel, orderModel, deliveryAgentModel } = require('../db');
 const jwt = require('jsonwebtoken');
 const { checkIfAdmin, checkToken } = require('../middleware');
 
@@ -23,7 +23,7 @@ Adminrouter.post('/register', async (req, res) => {
         }
     } catch (err) {
         console.log("In err")
-        res.status(500).json({ msg: err.message + " - server error" });
+        res.status(500).json({ msg: err._message + " - server error" });
     }
 });
 
@@ -179,6 +179,21 @@ Adminrouter.post('/assign/agent', checkToken,checkIfAdmin, async (req, res) => {
         res.status(500).json({ message: "Internal Server Error" });
     }
 });
+
+Adminrouter.get('/get/agents', checkToken,checkIfAdmin, async (req, res) => {
+
+    try{
+
+        const agents = await deliveryAgentModel.find({});
+        if (!agents || agents.length === 0) {
+            return res.status(404).json({ message: "No agents have arrived yet" });
+          }
+        res.status(200).json({msg:"agents",agents});
+    }
+    catch(error){
+        res.status(500).json({ message: "Internal Server Error" });
+    }
+})
 
 
 

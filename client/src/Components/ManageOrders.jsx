@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+
 import {
     Box,
     Table,
@@ -21,6 +23,8 @@ const ManageOrders = () => {
     const [searchType, setSearchType] = useState('email');
     const [searchQuery, setSearchQuery] = useState('');
     const [orders, setOrders] = useState([]);
+    const navigate = useNavigate();
+    
 
     // Filtered orders based on search query and type
     const filteredOrders = orders.filter((order) => {
@@ -34,6 +38,9 @@ const ManageOrders = () => {
 
     const deleteOrder = (id) => {
         setOrders((prevOrders) => prevOrders.filter((order) => order._id !== id));
+    };
+    const AssignOrder = (id) => {
+        navigate(`/agent/assign/to/orderid/${id}`);
     };
 
     async function fetchOrders() {
@@ -85,27 +92,27 @@ const ManageOrders = () => {
                 <Table>
                     <TableHead>
                         <TableRow sx={{ backgroundColor: '#f5f5f5' }}>
-                            <TableCell>Order Status</TableCell>
-                            <TableCell>Order ID</TableCell>
-                            <TableCell>Product</TableCell>
-                            <TableCell>Email</TableCell>
-                            <TableCell>UPI UTR</TableCell>
-                            <TableCell>Phone</TableCell>
-                            <TableCell>Actions</TableCell>
-                            <TableCell>Assign Agent</TableCell>
+                            <TableCell sx={{fontSize:"14px", fontWeight:"600"}}>Order Status</TableCell>
+                            <TableCell sx={{fontSize:"14px", fontWeight:"600"}}>Order ID</TableCell>
+                            <TableCell sx={{fontSize:"14px", fontWeight:"600"}}>Product</TableCell>
+                            <TableCell sx={{fontSize:"14px", fontWeight:"600"}}>Email</TableCell>
+                            <TableCell sx={{fontSize:"14px", fontWeight:"600"}}>UPI UTR</TableCell>
+                            <TableCell sx={{fontSize:"14px", fontWeight:"600"}}>Phone</TableCell>
+                            <TableCell sx={{fontSize:"14px", fontWeight:"600"}}>Actions</TableCell>
+                            <TableCell sx={{fontSize:"14px", fontWeight:"600"}}>Assign Agent</TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
                         {filteredOrders.length > 0 ? (
                             filteredOrders.map((order) => (
                                 <TableRow key={order._id} hover>
-                                    <TableCell>pending</TableCell>
-                                    <TableCell>{order._id.substring(0, 8)}</TableCell>
-                                    <TableCell>{order.productId.title}</TableCell>
-                                    <TableCell>{order.email}</TableCell>
-                                    <TableCell>{order.upiTransactionId}</TableCell>
-                                    <TableCell>{order.phone}</TableCell>
-                                    <TableCell>
+                                    <TableCell sx={{fontSize:"14px"}}>pending</TableCell>
+                                    <TableCell sx={{fontSize:"14px"}}>{order._id.substring(0, 8)}</TableCell>
+                                    <TableCell sx={{fontSize:"14px"}}>{order.productId.title}</TableCell>
+                                    <TableCell sx={{fontSize:"14px"}}>{order.email}</TableCell>
+                                    <TableCell sx={{fontSize:"14px"}}>{order.upiTransactionId}</TableCell>
+                                    <TableCell sx={{fontSize:"14px"}}>{order.phone}</TableCell>
+                                    <TableCell sx={{fontSize:"14px"}}>
                                         <Button
                                             variant="outlined"
                                             color="error"
@@ -119,15 +126,15 @@ const ManageOrders = () => {
                                             Delete
                                         </Button>
                                     </TableCell>
-                                    <TableCell>
+                                    <TableCell sx={{fontSize:"14px"}}>
                                         <Button
                                             variant="outlined"
                                             color="primary"
                                             size="small"
-                                            onClick={() => deleteOrder(order._id)}
+                                            onClick={() => AssignOrder(order._id)}
                                             sx={{
                                                 textTransform: 'none',
-                                                '&:hover': { backgroundColor: '#ffebee' },
+                                                '&:hover': { backgroundColor: 'blue' },
                                             }}
                                         >
                                             Assign
