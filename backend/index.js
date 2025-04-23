@@ -8,6 +8,7 @@ const checkToken = require('./middleware');
 const { productModel, orderModel, customerModel } = require('./db');
 const AuthRouter = require('./routes/CustomerAndAgentAuth');
 const CustomerRouter = require('./routes/customer');
+const AgentRouter = require('./routes/agent');
 require('dotenv').config();
 
 app.use(cors({
@@ -22,6 +23,7 @@ app.use(helmet());
 app.use('/api/v1/customer',CustomerRouter)
 app.use('/api/v1/auth',AuthRouter)
 app.use('/api/v1/admin', Adminrouter);
+app.use('/api/v1/agent', AgentRouter);
 
 
 app.get('/', (req, res) => { res.send('Hello World') });
