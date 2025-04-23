@@ -34,10 +34,10 @@ AuthRouter.get("/", (req, res) => {
 // ==========================
 
 AuthRouter.post("/customer/signup", async (req, res) => {
-    const { name, email, phone, password } = req.body;
+    const { name, email, phone, password,city,pincode,state } = req.body;
     console.log("Request Signup " +  name +  email + phone +  password)
     try {
-        if (!email || !password || !name || !phone) {
+        if (!email || !password || !name || !phone || !city || !pincode || !state) {
             return res.status(400).json({ message: "All fields are required" });
         }
 
@@ -52,6 +52,9 @@ AuthRouter.post("/customer/signup", async (req, res) => {
             email,
             phone,
             password: hashed,
+            pincode,
+            city,
+            state,
             buyProducts: []
         });
 

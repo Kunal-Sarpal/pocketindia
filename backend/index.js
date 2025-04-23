@@ -5,7 +5,7 @@ const cors = require('cors');
 const mongoose = require('mongoose');
 const helmet = require('helmet');
 const checkToken = require('./middleware');
-const { productModel, orderModel } = require('./db');
+const { productModel, orderModel, customerModel } = require('./db');
 const AuthRouter = require('./routes/CustomerAndAgentAuth');
 const CustomerRouter = require('./routes/customer');
 require('dotenv').config();
@@ -16,6 +16,7 @@ app.use(cors({
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(helmet());
+
 
 // Routes for admin and product
 app.use('/api/v1/customer',CustomerRouter)

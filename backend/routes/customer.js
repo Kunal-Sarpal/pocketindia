@@ -25,11 +25,11 @@ CustomerRouter.get('/products', async (req, res) => {
 // User purchase route
 CustomerRouter.post('/order',checkToken, async (req, res) => {
     console.log('POST /user/buy');
-    const {id} = req.query
-    const { upiTransactionId, email, phone } = req.body;
-
-    if (!upiTransactionId || !email || !phone) {
-        return res.status(400).json({ message: 'Missing required fields (UPI Transaction ID, email, phone)' });
+    const { upiTransactionId} = req.body;
+    const { id } = req.query; //product id
+    
+    if (!upiTransactionId ) {
+        return res.status(400).json({ message: 'Missing required fields (UPI Transaction ID)' });
     }
 
     try {
@@ -42,8 +42,7 @@ CustomerRouter.post('/order',checkToken, async (req, res) => {
         const order = await orderModel.create({
             productId: id,
             upiTransactionId,
-            email,
-            phone
+            userId: req.user.id,
         });
 
         if (!order) {
@@ -59,17 +58,16 @@ CustomerRouter.post('/order',checkToken, async (req, res) => {
 
 // customer purchased products
 CustomerRouter.get('/order/products',checkToken, async (req, res) => {
-    const { email, role } = req.user;
-    console.log('GET /user/buy/products', email, role);
-
+    const { email, role,id } = req.user;
+  
 
     if (role !== "Customer") {
         return res.status(403).json({ message: "Only customers can view purchased products" });
     }
 
     try {
-        const orders = await orderModel.find({ email }).populate('productId');
 
+        const orders = await orderModel.find({ userId: id }).populate('productId');
         const products = orders.map(order => order.productId);
 
         res.status(200).json({ message: "Products bought by customer", products });

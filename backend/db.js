@@ -58,24 +58,6 @@ const manageOrderSchema = mongoose.Schema({
             message: 'Invalid UPI Transaction ID',
         },
     },
-    email: {
-        type: String,
-        required: [true, 'Email is required'],
-        trim: true,
-        lowercase: true,
-        validate: {
-            validator: v => /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/.test(v),
-            message: 'Invalid email format',
-        },
-    },
-    phone: {
-        type: String,
-        required: [true, 'Phone number is required'],
-        validate: {
-            validator: v => /^[0-9]{10}$/.test(v),
-            message: 'Invalid phone number',
-        },
-    },
     productId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'product',
@@ -84,6 +66,7 @@ const manageOrderSchema = mongoose.Schema({
     userId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'customers',
+        required: [true, 'User Id is required'],
     }
 });
 
@@ -124,20 +107,12 @@ const deliveryAgentSchema = mongoose.Schema({
     },
     assignedOrders: [
         {
-            orderId: {
-                type: mongoose.Schema.Types.ObjectId,
-                ref: 'orders',
-                required: true
-            },
             status: {
                 type: String,
-                enum: ['assigned', 'in-progress', 'delivered'],
-                default: 'assigned'
+                enum: ['assigned', 'in-progress', 'delivered','not-assigned'],
+                default: ''
             },
-            assignedDate: {
-                type: Date,
-                default: Date.now
-            }
+           
         }
     ]
 });
@@ -172,6 +147,27 @@ const customerSchema = mongoose.Schema({
             validator: v => /^[0-9]{10}$/.test(v),
             message: 'Invalid phone number',
         },
+    },
+    pincode: {
+        type: String,
+        required: [true, 'Pincode is required'],
+        validate: {
+            validator: v => /^[0-9]{6}$/.test(v),
+            message: 'Invalid pincode format',
+        },
+        default: '144205',
+    },
+    city: {
+        type: String,
+        required: [true, 'City is required'],
+        trim: true,
+        default: 'Nawanshahr', 
+    },
+    state: {
+        type: String,
+        required: [true, 'State is required'],
+        trim: true,
+        default: 'Punjab', 
     },
     buyProducts: [
         {
@@ -261,7 +257,7 @@ const orderModel = mongoose.model('orders', manageOrderSchema);
 const deliveryAgentModel = mongoose.model('deliveryAgents', deliveryAgentSchema);
 const customerModel = mongoose.model('customers', customerSchema);
 const trackModel = mongoose.model('trackings', trackSchema);
-const singleAgentCustomerModel = mongoose.model('singleAgentCustomerMap', listProductoneSingleAgentSchema);
+const AssignAgent = mongoose.model('singleAgentCustomerMap', listProductoneSingleAgentSchema);
 
 // Export all models
 module.exports = {
@@ -270,5 +266,5 @@ module.exports = {
     deliveryAgentModel,
     customerModel,
     trackModel,
-    singleAgentCustomerModel
+    AssignAgent
 };

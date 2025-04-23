@@ -1,12 +1,15 @@
 const express = require('express');
-const { productModel, orderModel, deliveryAgentModel } = require('../db');
+const { productModel, orderModel, deliveryAgentModel, customerModel,AssignAgent, trackModel  } = require('../db');
 const jwt = require('jsonwebtoken');
 const { checkIfAdmin, checkToken } = require('../middleware');
 
 
 const   Adminrouter = express.Router();
-Adminrouter.get('/', (req, res) => {
+Adminrouter.get('/', async (req, res) => {
     res.send("Healthy");
+
+                                                                                                                                                                                                    
+    
 });
 Adminrouter.post('/register', async (req, res) => {
     console.log(" Register");
@@ -73,8 +76,7 @@ Adminrouter.post('/delete/product', checkToken,checkIfAdmin, async (req, res) =>
 Adminrouter.get('/get/orders', async (req, res) => {
     console.log("get/orders")
     try{
-        const orders = await orderModel.find().populate("productId");
-        console.log(orders)
+        const orders = await orderModel.find().populate("productId").populate("userId");
         return res.status(200).json({msg:"orders",orders});
     }
     catch(err){
@@ -132,6 +134,7 @@ Adminrouter.post('/assign/agent', checkToken,checkIfAdmin, async (req, res) => {
         // Get the order and customer
         const order = await orderModel.findById(orderId);
         if (!order) return res.status(404).json({ message: "Order not found" });
+        console.log(order)
 
         const customer = await customerModel.findById(order.userId);
         if (!customer) return res.status(404).json({ message: "Customer not found" });
@@ -140,16 +143,16 @@ Adminrouter.post('/assign/agent', checkToken,checkIfAdmin, async (req, res) => {
         if (!agent) return res.status(404).json({ message: "Agent not found" });
 
         // Create assignment entry
-        const assignment = await agentAssignmentModel.create({
-            orderId: order._id,
+        
+        const assignment = await AssignAgent.create({
+            orderId: orderId,
             userId: customer._id,
-            agentId: agent._id,
+            agentId: agentId,
             assignedAt: new Date()
         });
 
         // Update agent's assignedOrders
         agent.assignedOrders.push({
-            orderId,
             status: 'assigned'
         });
         await agent.save();
@@ -168,10 +171,13 @@ Adminrouter.post('/assign/agent', checkToken,checkIfAdmin, async (req, res) => {
                 }
             ]
         });
+        const orderStatus = agent.assignedOrders[0].status;
 
         res.status(200).json({
-            message: "Agent manually assigned successfully",
-            assignment
+            message: "Agent assigned successfully",
+            assignment,
+            orderStatus
+            
         });
 
     } catch (error) {
@@ -181,7 +187,6 @@ Adminrouter.post('/assign/agent', checkToken,checkIfAdmin, async (req, res) => {
 });
 
 Adminrouter.get('/get/agents', checkToken,checkIfAdmin, async (req, res) => {
-
     try{
 
         const agents = await deliveryAgentModel.find({});
@@ -194,6 +199,32 @@ Adminrouter.get('/get/agents', checkToken,checkIfAdmin, async (req, res) => {
         res.status(500).json({ message: "Internal Server Error" });
     }
 })
+
+Adminrouter.get('/get/order/status', checkToken,checkIfAdmin, async (req, res) => {
+    console.log("get/order/status")
+    try{
+
+        const {orderId} = req.query;
+        if (!orderId) {
+            return res.status(400).json({ message: "Order ID is required" });
+          }
+          const assignedAgents = await AssignAgent.find({ orderId: orderId }).populate("agentId");
+
+          let status = 'not-assigned';
+  
+          if (assignedAgents.length > 0 && assignedAgents[0].agentId?.assignedOrders?.length > 0) {
+              status = assignedAgents[0].agentId.assignedOrders[0].status || 'not-assigned';
+          }
+  
+          return res.status(200).json({ msg: "status", status });
+    }
+    catch(error){
+        console.log(error)
+        res.status(500).json({ message: error });
+    }
+})
+
+
 
 
 
