@@ -14,8 +14,7 @@ const validateUpiTransactionId = (upiTransactionId) => /^\d{12}$/.test(upiTransa
 const Payment = () => {
     const [formData, setFormData] = useState({
         upiTransactionId: '',
-        email: '',
-        phoneNumber: ''
+
     });
     const [errors, setErrors] = useState({});
     const [isSubmitted, setIsSubmitted] = useState(false);
@@ -34,15 +33,13 @@ const Payment = () => {
     };
 
     const handleNextStep = async () => {
-        const { upiTransactionId, email, phoneNumber } = formData;
+        const { upiTransactionId } = formData;
         const id = params.id;
         let validationErrors = {};
 
         // Validate input fields
         if (!validateUpiTransactionId(upiTransactionId))
             validationErrors.upiTransactionId = 'Please enter a valid Transaction ID.';
-        if (!validateEmail(email)) validationErrors.email = 'Please enter a valid email address.';
-        if (!validatePhoneNumber(phoneNumber)) validationErrors.phoneNumber = 'Please enter a valid 10-digit phone number.';
 
         if (Object.keys(validationErrors).length === 0) {
             setIsSubmitted(true); 
@@ -117,33 +114,10 @@ const Payment = () => {
                                         </div>
 
                                         {/* Email */}
-                                        <div>
-                                            <label className="block text-sm font-medium text-gray-700">Email Address</label>
-                                            <input
-                                                type="email"
-                                                name="email"
-                                                value={formData.email}
-                                                onChange={handleInputChange}
-                                                className="w-full mt-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                                placeholder="Enter your email address"
-                                            />
-                                            {errors.email && <p className="text-red-500 text-xs">{errors.email}</p>}
-                                        </div>
+                                     
 
                                         {/* Phone Number */}
-                                        <div>
-                                            <label className="block text-sm font-medium text-gray-700">Phone Number</label>
-                                            <input
-                                             
-                                                type="text"
-                                                name="phoneNumber"
-                                                value={formData.phoneNumber}
-                                                onChange={handleInputChange}
-                                                className="w-full mt-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                                placeholder="Enter your 10-digit phone number"
-                                            />
-                                            {errors.phoneNumber && <p className="text-red-500 text-xs">{errors.phoneNumber}</p>}
-                                        </div>
+                                       
 
                                         {/* Submit Button */}
                                         <div className="mt-6">

@@ -4,6 +4,7 @@ import { LoginAgent, LoginCustomer } from '../store/actions/Productaction';
 import { toast, ToastContainer } from 'react-toastify';
 
 const Login = () => {
+    const [loading,setLoading] = useState(false)
     const [pointer, setPointer] = useState(false); // false = Agent, true = Customer
     const [formData, setFormData] = useState({
         email: '',
@@ -21,8 +22,10 @@ const Login = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setLoading(true)
         if (pointer) {
             const res = await LoginCustomer(formData);
+            console.log(res)
             if(res != undefined){
                 if (res.statusCode != undefined && res.statusCode == 500 || res.statusCode == 404 || res.statusCode == 401) {
                     toast.error(res.errorMessage);
@@ -32,11 +35,18 @@ const Login = () => {
                     toast.warning(res.errorMessage);
                     return;
                 }
+                else{
+                    toast.error(res.errorMessage)
+                    return;
+                }
             }
             toast.success("Customer Logged in Successfully");
+            localStorage.setItem('value',"1Y11");
+        
             setTimeout(() => {
                 navigate('/')
-            }, 2000)
+                setLoading(false)
+            }, 2000)    
 
         } else {
             const res = await LoginAgent(formData);
@@ -49,6 +59,7 @@ const Login = () => {
                 return;
             }
             toast.success("Agent Logged in Successfully");
+            localStorage.setItem('value',"1X11");
             setMessage(res.message)
         }
        
@@ -122,11 +133,13 @@ const Login = () => {
                             className='w-full p-3 py-4 rounded-md border border-zinc-600 bg-zinc-900 text-white placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-zinc-600 text-sm'
                         />
 
-                        <button
+
+                        <button 
+                            disabled={loading}
                             type='submit'
                             className='w-full bg-zinc-700 hover:bg-zinc-600 text-white py-3 rounded-md font-semibold tracking-wide transition duration-200 shadow-md'
                         >
-                            Log in
+                            {loading ? <div className='flex  gap-2 w-full items-center justify-center h-full w-fit'><div className=' w-5 h-5 rounded-full border-b-1 border-t-zinc-400 border-2 animate-spin'></div> <div>Logging...</div></div> : "Login"}
                         </button>
                         <h1 className={`top-28 w-96 border border-zinc-700  rounded-lg p-5 px-10  text-xl  font-extrabold shadow tracking-wide text-zinc-300`}>
                             {pointer ? 'Customer Log in' : 'Agent Login in'}

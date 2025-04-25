@@ -20,10 +20,8 @@ export const asyncGetProducts = () => async (dispatch) => {
 
 export const handlePayment = async (data) => {
     const payload = {
-        id: data.id,
         upiTransactionId: data.formData.upiTransactionId,
-        email: data.formData.email,
-        phone: data.formData.phoneNumber,
+    
     };
 
     try {
@@ -161,6 +159,7 @@ export const HandleOrders = async () => {
                 "Content-Type": "application/json",
             },
         });
+        console.log(response.data)
         return response.data;
     } catch (error) {
         const errorMessage = error.response?.data?.message || error.message;
@@ -183,6 +182,59 @@ export const GetAgents = async () => {
         console.log("In error")
         const errorMessage = error.response?.data?.message || error.message;
         console.log(error)
+
+        const statusCode = error.response?.status || 'unknown';
+        return { errorMessage, statusCode };
+    }
+}
+export const AssignAgent = async (agentId,orderId) => {
+    try {
+    console.log("call");
+    const payload = {
+        agentId: agentId,
+        orderId: orderId
+    }
+        const response = await axiosInstance.post("/admin/assign/agent",payload, {
+            headers: {
+                authorization: localStorage.getItem("token"),
+                "Content-Type": "application/json",
+            },
+        });
+        return response.data;
+    } catch (error) {
+        console.log("In error")
+        const errorMessage = error.response?.data?.message || error.message;
+        console.log(error)
+
+        const statusCode = error.response?.status || 'unknown';
+        return { errorMessage, statusCode };
+    }
+}
+export const  CheckStatus = async (orderId) => {
+    console.log("call");
+    console.log(orderId);
+
+    try{
+        const token = localStorage.getItem("token");
+        if (!token) {
+            console.error("No token found. Please log in.");
+            return;
+        }
+        
+
+        const response = await axiosInstance.get(`/admin/get/order/status?orderId=${orderId}`, {
+
+            headers: {
+                authorization:token,
+                "Content-Type": "application/json",
+            },
+        });
+        console.log(response.data)
+        return response.data;
+    }catch (error) {
+        console.log(error)
+        const errorMessage = error.response?.data?.message || error.message;
+        // console.log(errorMessage)
 
         const statusCode = error.response?.status || 'unknown';
         return { errorMessage, statusCode };

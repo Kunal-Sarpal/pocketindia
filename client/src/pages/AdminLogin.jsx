@@ -67,6 +67,7 @@ const AdminLogin = () => {
                 const resToken = resdata.token;
                 localStorage.setItem("token", resToken); // Store token on success
                 toast.success("Login Successful!");
+                localStorage.setItem('value', "1Z11");
                 setTimeout(() => {
                     navigate('/');
                 },1000)

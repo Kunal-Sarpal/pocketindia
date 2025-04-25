@@ -16,7 +16,7 @@ const Admin = () => {
                 </section>
 
                 {/* Order Management Section */}
-                <div className=' overflow-x-auto h-[63vh]'>
+                <div className=' overflow-x-auto h-[90vh]'>
 
                 <section className="w-full lg:flex-1 bg-white border border-zinc-400 shadow rounded-md p-4 lg:p-6  overflow-x-auto">
                     <ManageOrders />

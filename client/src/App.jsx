@@ -10,6 +10,7 @@ import SignUp from './pages/SignUp'
 import Login from './pages/Login'
 import ProductStatus from './pages/ProductStatus'
 import Agent from './pages/Agent'
+import AgentDashBoard from './pages/AgentDashBoard'
 
 const App = () => {
 
@@ -34,6 +35,7 @@ const App = () => {
           <Route path='/cart' element={<Cart />} />
           <Route path='/api/v1/pocket/admin/pocketindia' element={<AdminLogin/>} />
           <Route path='/payment/:id' element={<Payment />} />
+          <Route path='/agent/dashboard' element={<AgentDashBoard />} />
         </Routes>
       </div>
 
