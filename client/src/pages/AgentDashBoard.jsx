@@ -4,18 +4,21 @@ import {
   Card, CardContent, Typography, TextField,
   Button, Divider, Alert, CircularProgress
 } from '@mui/material';
-import { LocationOn, LocalShipping, CheckCircle } from '@mui/icons-material';
+import { LocationOn, LocalShipping } from '@mui/icons-material';
+import { HandleDelveryStatus } from '../store/actions/Productaction';
+import { toast, ToastContainer } from 'react-toastify';
 
-const API_BASE = "http://localhost:3000/api/v1"; // change to your backend
+const API_BASE = "http://localhost:3000/api/v1"; // your backend URL
 
 export default function AgentDashboard() {
   const [loading, setLoading] = useState(true);
-  const [orders, setOrders] = useState([]);
+  const [ordersData, setOrdersData] = useState({});
   const [error, setError] = useState(null);
   const [location, setLocation] = useState('');
   const [pincode, setPincode] = useState('');
   const [message, setMessage] = useState('');
-  const [selectedOrderId, setSelectedOrderId] = useState('');
+  const [agentId, setAgentId] = useState('');
+  const [orderId, setOrderId] = useState('');
 
   const token = localStorage.getItem('token');
 
@@ -25,13 +28,13 @@ export default function AgentDashboard() {
       const res = await axios.get(`${API_BASE}/agent/orders`, {
         headers: { Authorization: `${token}` }
       });
-      console.log(res.data);
-      setOrders(res.data.assignedOrders);
-      if (res.data.assignedOrders.length > 0) {
-        setSelectedOrderId(res.data.assignedOrders[0]._id);
-      }
+    
+      setAgentId(res.data.agentId);
+      setOrderId(res.data.assignedOrders[0]?._id);
+      
+      setOrdersData(res.data);
     } catch (err) {
-      setError("Failed to load orders.");
+      setError(err?.response?.data?.message || err.message || "something went wrong");
     } finally {
       setLoading(false);
     }
@@ -44,28 +47,70 @@ export default function AgentDashboard() {
   const handleStatusUpdate = async () => {
     try {
       const res = await axios.post(
-        `${API_BASE}/agent/update-status`,
-        { orderId: selectedOrderId, location, pincode },
+        `${API_BASE}/agent/update-location?agentId=${agentId}`,
+        { location, pincode },
         { headers: { Authorization: `${token}` } }
       );
-      setMessage(res.data.chargesDeducted);
+      setMessage(res.data);
       setLocation('');
       setPincode('');
-      fetchOrders(); // optional: refresh orders if you want to show updated data
+     window.location.reload();
     } catch (err) {
-      setMessage("Update failed. Please try again.");
+      setMessage(err.response?.data.error.message || err.message || err.message || "something went wrong");
     }
   };
 
-  if (loading) return <div className="flex justify-center items-center h-screen"><CircularProgress /></div>;
+ 
+
+async function handleStatusUpdateDelevered(orderId){
+          const res = confirm("Are you sure you want to update the order as delivered?")
+          if(res){
+              try{
+                  const response = await HandleDelveryStatus(orderId);
+                  console.log(response.message + "Kunal")
+                  if (response.errorMessage) {
+                    
+                      toast.error(response.errorMessage);
+                      return;
+                  }
+                  toast.info(response.message);
+              }
+              catch (error) {
+                  console.error("Error updating order status:", error);
+                  toast.error("Failed to update order status. Please try again.");
+              }
+          } 
+          else{
+              alert("Cancelled")
+          }
+  }
+
+  if (loading) return (
+    <div className="flex justify-center items-center h-screen">
+      <CircularProgress />
+    </div>
+  );
 
   return (
+    <>
+    <ToastContainer/>
     <div className="min-h-screen p-10 bg-gradient-to-br from-indigo-50 to-purple-100 font-sans">
       <Typography variant="h4" className="text-purple-800 font-bold mb-8">Agent Dashboard</Typography>
 
       {error && <Alert severity="error">{error}</Alert>}
 
-      {orders.length === 0 ? (
+      {/* Agent Details Section */}
+      <Card className="mb-8 shadow-xl rounded-xl border border-purple-200">
+        <CardContent>
+          <Typography variant="h6" className="text-purple-700 mb-4">Agent Info</Typography>
+          <Typography><strong>City:</strong> {ordersData.agentCity}</Typography>
+          <Typography><strong>Pincode:</strong> {ordersData.agentPincode}</Typography>
+          <Typography><strong>Assigned At:</strong> {new Date(ordersData.assignedAt).toLocaleString()}</Typography>
+        </CardContent>
+      </Card>
+
+      {/* Orders Section */}
+      {ordersData.assignedOrders?.length === 0 || error ? (
         <Alert severity="info">No orders assigned yet. Please wait.</Alert>
       ) : (
         <>
@@ -73,18 +118,20 @@ export default function AgentDashboard() {
             <CardContent>
               <div className="flex items-center gap-2 mb-4 text-purple-700">
                 <LocalShipping />
-                <Typography variant="h6">Assigned Order</Typography>
+                <Typography variant="h6">Assigned Orders</Typography>
               </div>
-              {orders.map(order => (
+              {ordersData.assignedOrders?.map(order => (
                 <div key={order._id} className="mb-4 p-3 rounded bg-white border shadow-sm">
                   <Typography><strong>Order ID:</strong> {order._id}</Typography>
-                  <Typography><strong>Pickup:</strong> Cali,LA</Typography>
-                  <Typography><strong>Delivery:</strong> {order.userId.state + " " +order.userId.city +" " + order.userId.pincode }</Typography>
+                  <Typography><strong>Pickup:</strong> Cali, LA</Typography>
+                  <Typography><strong>Delivery:</strong> {order.userId.state} {order.userId.city} {order.userId.pincode}</Typography>
+                  <Typography><strong>Current Agent Location:</strong> {ordersData.agentCity}</Typography>
                 </div>
               ))}
             </CardContent>
           </Card>
 
+          {/* Update Location Section */}
           <Card className="mb-8 shadow-xl rounded-xl border border-purple-200">
             <CardContent>
               <div className="flex items-center gap-2 mb-4 text-purple-700">
@@ -107,7 +154,7 @@ export default function AgentDashboard() {
                 <Button
                   variant="contained"
                   className="bg-purple-600 hover:bg-purple-700"
-                  onClick={handleStatusUpdate}
+                  onClick={()=>handleStatusUpdate()}
                   disabled={!location || !pincode}
                 >
                   Update
@@ -117,9 +164,19 @@ export default function AgentDashboard() {
                 <Alert severity="info" className="mt-4">{message}</Alert>
               )}
             </CardContent>
+            <p>If you have deleivered the order succesfull clcik this button</p>
+            <Button
+                  variant="contained"
+                  className="bg-purple-600 hover:bg-purple-700"
+                  onClick={()=>handleStatusUpdateDelevered(orderId)}
+      
+                >
+                  Update
+                </Button>
           </Card>
         </>
       )}
     </div>
+    </>
   );
 }

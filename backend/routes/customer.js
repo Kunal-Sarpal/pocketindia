@@ -69,8 +69,10 @@ CustomerRouter.get('/order/products',checkToken, async (req, res) => {
 
         const orders = await orderModel.find({ userId: id }).populate('productId');
         const products = orders.map(order => order.productId);
+        products.orderId = orders.map(order => order._id);
+        console.log(orders)
 
-        res.status(200).json({ message: "Products bought by customer", products });
+        res.status(200).json({ message: "Products bought by customer", orders});
     } catch (err) {
         res.status(500).json({ message: "Server error", error: err.message });
     }

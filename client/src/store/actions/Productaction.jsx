@@ -240,3 +240,27 @@ export const  CheckStatus = async (orderId) => {
         return { errorMessage, statusCode };
     }
 }
+export const  HandleDelveryStatus = async (orderId) => {
+    console.log("call");
+    console.log(orderId);
+
+    try{
+        
+        const response = await axiosInstance.post(`/agent/delivery?orderId=${orderId}`,{}, {
+            headers: {
+                Authorization:localStorage.getItem("token"),
+                "Content-Type": "application/json",
+            },
+        });
+        console.log(response.data)
+        return response.data;
+    }catch (error) {
+        console.log(error)
+        const errorMessage = error.response?.data?.message || error.message;
+        console.log(errorMessage)
+        const statusCode = error.response?.status || 'unknown';
+        return { errorMessage, statusCode };
+    }
+}
+
+

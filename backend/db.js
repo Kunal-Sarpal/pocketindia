@@ -105,6 +105,22 @@ const deliveryAgentSchema = mongoose.Schema({
         type: String,
         default: 'Nawanshahr'
     },
+
+    pincode: {
+        type: String,
+        required: [true, 'Pincode is required'],
+        validate: {
+            validator: v => /^[0-9]{6}$/.test(v),
+            message: 'Invalid pincode format',
+        },
+        default: '144205',
+    },
+    city: {
+        type: String,
+        required: [true, 'City is required'],
+        trim: true,
+        default: 'Nawanshahr', 
+    },
     assignedOrders: [
         {
             status: {
@@ -251,6 +267,23 @@ const listProductoneSingleAgentSchema = mongoose.Schema({
         }
 });
 
+const orderStatusSchema = mongoose.Schema({
+    orderId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'orders',
+        required: true
+    },
+    statusUser:{
+        type:Boolean,
+        default:false
+    },
+    statusAgent:{
+        type:Boolean,
+        default:false
+    },
+
+}, { timestamps: true });
+
 // Models
 const productModel = mongoose.model('product', productSchema);
 const orderModel = mongoose.model('orders', manageOrderSchema);
@@ -258,6 +291,7 @@ const deliveryAgentModel = mongoose.model('deliveryAgents', deliveryAgentSchema)
 const customerModel = mongoose.model('customers', customerSchema);
 const trackModel = mongoose.model('trackings', trackSchema);
 const AssignAgent = mongoose.model('singleAgentCustomerMap', listProductoneSingleAgentSchema);
+const orderStatusModel = mongoose.model('orderStatus', orderStatusSchema);
 
 // Export all models
 module.exports = {
@@ -266,5 +300,6 @@ module.exports = {
     deliveryAgentModel,
     customerModel,
     trackModel,
-    AssignAgent
+    AssignAgent,
+    orderStatusModel
 };

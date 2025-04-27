@@ -24,6 +24,7 @@ const Agent = () => {
             setAssignedAgentId(agentId);
 
             const status = await AssignAgent(agentId, orderId);
+            console.log(status);
             if (status.statusCode === 403) {
                 setError("You are not authorized to access this page. Please login as an admin.");
                 return;

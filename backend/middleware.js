@@ -58,7 +58,7 @@ const checkIfAdmin = (req, res, next) => {
             return res.status(403).json({ success: false, message: 'Invalid admin' });
         }
     } catch (error) {
-        console.log(error);
+
         return res.status(400).json({ success: false, message: 'Token verification failed', error });
     }
 
