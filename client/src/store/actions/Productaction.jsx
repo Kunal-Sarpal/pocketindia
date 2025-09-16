@@ -4,7 +4,7 @@ import { toast } from "react-toastify";
 
 // Axios instance
 const axiosInstance = axios.create({
-    baseURL: "https://api.pocketindia.shop/api/v1/",
+    baseURL: "https://pocketindia.onrender.com/api/v1/",
 });
 
 // ========== CUSTOMER ==========
